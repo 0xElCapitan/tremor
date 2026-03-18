@@ -2,7 +2,7 @@
 
 **Threshold Resolution & Earth Movement Oracle**
 
-A seismic intelligence construct for the Echelon prediction market framework, built on constructs by Soju. Ridden by Loa (https://github.com/0xHoneyJar/loa).
+A seismic intelligence construct for the [Echelon](https://github.com/echelon) prediction market framework, built on constructs by [Soju](https://github.com/0xHoneyJar/loa). Ridden by [Loa](https://github.com/0xHoneyJar/loa).
 
 ## What it does
 
@@ -24,7 +24,7 @@ Earthquakes are uniquely good training data for AI prediction markets:
 
 ```bash
 # Clone
-git clone https://github.com/your-org/tremor.git
+git clone https://github.com/0xElCapitan/tremor.git
 cd tremor
 
 # No npm install needed — zero external dependencies
@@ -79,6 +79,9 @@ tremor/
 │   │   └── emsc.js           # EMSC cross-validation
 │   ├── theatres/
 │   │   ├── mag-gate.js       # Magnitude Gate (binary threshold)
+│   │   ├── aftershock.js     # Aftershock Cascade (multi-class Omori)
+│   │   ├── swarm.js          # Swarm Watch (b-value escalation)
+│   │   ├── depth.js          # Depth Regime (subduction zone)
 │   │   └── paradox.js        # Oracle Divergence (Paradox Engine)
 │   ├── processor/
 │   │   ├── bundles.js        # Evidence bundle construction
@@ -91,8 +94,8 @@ tremor/
 ├── spec/
 │   └── construct.json        # Machine-readable construct spec
 ├── test/
-│   └── tremor.test.js        # Test suite (node:test, no deps)
-├── .echelon/                  # Echelon framework metadata
+│   └── tremor.test.js        # Test suite (48 tests, 16 suites)
+├── BUTTERFREEZONE.md          # Agent-facing project interface
 ├── .env.example
 ├── package.json
 └── README.md
