@@ -2,7 +2,7 @@
 
 **Threshold Resolution & Earth Movement Oracle**
 
-A seismic intelligence construct for the [Echelon](https://github.com/echelon) prediction market framework, built on constructs by [Soju](https://github.com/0xHoneyJar/loa). Ridden by [Loa](https://github.com/0xHoneyJar/loa).
+A seismic intelligence construct for the [Echelon](https://github.com/AITOBIAS04/Echelon) prediction market framework, built on constructs by [Soju](https://github.com/0xHoneyJar/loa). Ridden by [Loa](https://github.com/0xHoneyJar/loa).
 
 ## What it does
 
