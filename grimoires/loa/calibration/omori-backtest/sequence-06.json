@@ -2,9 +2,9 @@
   "sequence_id": 6,
   "label": "2011 Mineral, Virginia",
   "role": "regime-fit",
-  "regime_assigned": "default",
+  "regime_assigned": "intraplate",
   "regime_expected": "intraplate",
-  "regime_match": false,
+  "regime_match": true,
   "mainshock_event_id": "se609212",
   "mainshock_magnitude": 5.8,
   "mainshock_depth_km": 6,
@@ -12,10 +12,10 @@
   "mainshock_location": "11 km SSW of Mineral, Virginia",
   "window_end_utc": "2011-08-26T17:51:04.250Z",
   "omori_params": {
-    "K": 18,
-    "c": 0.05,
-    "p": 1,
-    "bath_delta": 1.2
+    "K": 8,
+    "c": 0.08,
+    "p": 0.95,
+    "bath_delta": 1.3
   },
   "rupture_length_km": 6.1,
   "match_radius_deg": 0.08,
@@ -30,30 +30,30 @@
   "partial_windows": [
     {
       "window_hours": 6,
-      "projected": 128.4,
+      "projected": 41.2,
       "actual": 0,
       "relative_error": null
     },
     {
       "window_hours": 24,
-      "projected": 218.2,
+      "projected": 78,
       "actual": 1,
-      "relative_error": 217.2
+      "relative_error": 77
     },
     {
       "window_hours": 72,
-      "projected": 294.6,
+      "projected": 112.4,
       "actual": 2,
-      "relative_error": 146.3
+      "relative_error": 55.2
     }
   ],
-  "projected_count": 294.6,
+  "projected_count": 112.4,
   "actual_count": 2,
   "projected_bucket": "21+",
   "actual_bucket": "0-2",
   "bucket_hit": false,
-  "relative_error": 146.3,
-  "log_error": 4.59,
+  "relative_error": 55.2,
+  "log_error": 3.632,
   "probability_score": 0.4,
   "aftershock_truncated": false,
   "aftershock_events": [

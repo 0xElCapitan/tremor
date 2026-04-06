@@ -2,9 +2,9 @@
   "sequence_id": 9,
   "label": "2008 Wells, Nevada",
   "role": "inference",
-  "regime_assigned": "transform",
+  "regime_assigned": "intraplate",
   "regime_expected": "default or intraplate",
-  "regime_match": false,
+  "regime_match": true,
   "mainshock_event_id": "nn00234425",
   "mainshock_magnitude": 5.9,
   "mainshock_depth_km": 7.9,
@@ -12,10 +12,10 @@
   "mainshock_location": "8 km ENE of Wells, Nevada",
   "window_end_utc": "2008-02-24T14:16:02.821Z",
   "omori_params": {
-    "K": 15,
-    "c": 0.03,
-    "p": 1.1,
-    "bath_delta": 1.2
+    "K": 8,
+    "c": 0.08,
+    "p": 0.95,
+    "bath_delta": 1.3
   },
   "rupture_length_km": 7.1,
   "match_radius_deg": 0.1,
@@ -30,30 +30,30 @@
   "partial_windows": [
     {
       "window_hours": 6,
-      "projected": 201.7,
+      "projected": 49,
       "actual": 3,
-      "relative_error": 66.233
+      "relative_error": 15.333
     },
     {
       "window_hours": 24,
-      "projected": 300.2,
+      "projected": 92.7,
       "actual": 5,
-      "relative_error": 59.04
+      "relative_error": 17.54
     },
     {
       "window_hours": 72,
-      "projected": 372.6,
+      "projected": 133.6,
       "actual": 8,
-      "relative_error": 45.575
+      "relative_error": 15.7
     }
   ],
-  "projected_count": 372.6,
+  "projected_count": 133.6,
   "actual_count": 8,
   "projected_bucket": "21+",
   "actual_bucket": "6-10",
   "bucket_hit": false,
-  "relative_error": 45.575,
-  "log_error": 3.726,
+  "relative_error": 15.7,
+  "log_error": 2.705,
   "probability_score": 0.4,
   "aftershock_truncated": false,
   "aftershock_events": [

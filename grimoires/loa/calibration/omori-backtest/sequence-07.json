@@ -2,9 +2,9 @@
   "sequence_id": 7,
   "label": "2020 Magna, Utah",
   "role": "regime-fit",
-  "regime_assigned": "transform",
+  "regime_assigned": "intraplate",
   "regime_expected": "intraplate",
-  "regime_match": false,
+  "regime_match": true,
   "mainshock_event_id": "uu60363602",
   "mainshock_magnitude": 5.7,
   "mainshock_depth_km": 11.9,
@@ -12,10 +12,10 @@
   "mainshock_location": "5 km NNE of Magna, Utah",
   "window_end_utc": "2020-03-21T13:09:31.530Z",
   "omori_params": {
-    "K": 15,
-    "c": 0.03,
-    "p": 1.1,
-    "bath_delta": 1.2
+    "K": 8,
+    "c": 0.08,
+    "p": 0.95,
+    "bath_delta": 1.3
   },
   "rupture_length_km": 5.2,
   "match_radius_deg": 0.07,
@@ -30,30 +30,30 @@
   "partial_windows": [
     {
       "window_hours": 6,
-      "projected": 142.8,
+      "projected": 34.7,
       "actual": 3,
-      "relative_error": 46.6
+      "relative_error": 10.567
     },
     {
       "window_hours": 24,
-      "projected": 212.5,
+      "projected": 65.6,
       "actual": 4,
-      "relative_error": 52.125
+      "relative_error": 15.4
     },
     {
       "window_hours": 72,
-      "projected": 263.8,
+      "projected": 94.6,
       "actual": 4,
-      "relative_error": 64.95
+      "relative_error": 22.65
     }
   ],
-  "projected_count": 263.8,
+  "projected_count": 94.6,
   "actual_count": 4,
   "projected_bucket": "21+",
   "actual_bucket": "3-5",
   "bucket_hit": false,
-  "relative_error": 64.95,
-  "log_error": 3.97,
+  "relative_error": 22.65,
+  "log_error": 2.951,
   "probability_score": 0.4,
   "aftershock_truncated": false,
   "aftershock_events": [
