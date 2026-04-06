@@ -3,3 +3,6 @@ node_modules/
 .DS_Store
 *.log
 .echelon/state/
+
+# Loa disabled skills (feature-gated)
+.claude/.skills-disabled/
