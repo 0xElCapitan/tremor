@@ -14,7 +14,7 @@ The prediction market is the factory. The calibrated training data is the produc
 
 Earthquakes are uniquely good training data for AI prediction markets:
 
-- **Ground truth oracle** — USGS reviewed catalog. No human interpretation, no disputes.
+- **Clean resolution** — USGS reviewed catalog. Machine-readable, no human interpretation needed.
 - **Binary structure** — did the threshold get crossed or not? Clean Brier targets.
 - **Fast cycles** — hours to days, not weeks. ~55 M5.0+ events per month globally.
 - **Exogenous** — no reflexivity. Predictions don't influence earthquakes.
@@ -68,7 +68,7 @@ const certs = tremor.getCertificates();
 
 ## v0.1.1: Calibration & Safety Release
 
-This release adds empirical calibration and is **production-hardened** with comprehensive safety fixes and governance:
+This release adds empirical calibration with comprehensive safety fixes and governance:
 
 - **5 critical safety fixes**: Race condition prevention, NaN guards, atomic exports, input validation, poll resilience
 - **Comprehensive test suite**: 70 tests across 22 suites (48 baseline + 22 regression tests proving fixes)
@@ -84,7 +84,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed changes, [SECURITY.md](SECURITY.md
 - **GitHub Actions CI** on push and PR
 - **Zero external dependencies**
 - **AGPL-3.0 licensed**
-- **Production-ready**
+- **Calibration in progress** — see status table below
 
 ## Architecture
 
