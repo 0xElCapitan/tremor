@@ -15,14 +15,16 @@
 /**
  * Modified Omori-law parameters by tectonic regime.
  *
+ * source: Omori (1894), "On the Aftershocks of Earthquakes"; Utsu (1961),
+ * "A statistical study on the occurrence of aftershocks".
  * The Omori-Utsu law: n(t) = K / (t + c)^p
  * where n(t) = aftershock rate at time t after mainshock,
  * K = productivity, c = time offset, p = decay exponent.
  *
- * Bath's law: largest aftershock ≈ mainshock - 1.2
+ * source: Båth (1965) — largest aftershock ≈ mainshock − 1.2
  *
- * These are approximate parameters. In production, calibrate from
- * historical sequences per tectonic regime.
+ * TBD: approximate, calibrate in production — see
+ * grimoires/loa/calibration/ and omori-backtest-protocol.md
  */
 const REGIME_PARAMS = {
   subduction: { K: 25, c: 0.05, p: 1.05, bath_delta: 1.1 },
@@ -56,8 +58,10 @@ const BUCKETS = [
 function omoriExpectedCount(params, mainMag, thresholdMag, windowHours) {
   const { K, c, p } = params;
 
-  // Scale productivity by magnitude difference (Reasenberg & Jones 1989)
-  // Higher mainshock → more aftershocks above threshold
+  // Scale productivity by magnitude difference.
+  // source: Reasenberg & Jones (1989), "Earthquake Hazard After a
+  // Mainshock in California", Science 243(4895). 0.75 exponent from
+  // their productivity scaling relation.
   const magDiff = mainMag - thresholdMag;
   const scaledK = K * Math.pow(10, 0.75 * (magDiff - 1));
 
@@ -128,16 +132,55 @@ function logFactorial(n) {
  * sourced from a tectonic regionalization dataset. In production this
  * should be replaced with a proper regionalization (e.g. Hayes et al.
  * Slab2 for subduction zones, PB2002 plate boundaries for transform).
- * See empirical validation audit.
+ * See grimoires/loa/calibration/
  */
 function inferRegime(depth_km, lat, lon) {
   if (depth_km > 100) return 'subduction';
   if (depth_km > 50) return 'subduction';
+
+  // South America Andes subduction zone
+  // TBD: empirical calibration needed — bounding box is approximate;
+  // see grimoires/loa/calibration/
+  if (lon >= -82 && lon <= -65 && lat >= -55 && lat <= 12) {
+    return depth_km > 20 ? 'subduction' : 'transform';
+  }
+
+  // Indonesia/Philippines subduction zone
+  // TBD: empirical calibration needed — bounding box is approximate;
+  // see grimoires/loa/calibration/
+  if (lon >= 95 && lon <= 145 && lat >= -10 && lat <= 20) {
+    return depth_km > 20 ? 'subduction' : 'transform';
+  }
+
+  // Caribbean plate boundary (transform-dominated)
+  // TBD: empirical calibration needed — bounding box is approximate;
+  // see grimoires/loa/calibration/
+  if (lon >= -85 && lon <= -60 && lat >= 10 && lat <= 25) {
+    return 'transform';
+  }
+
+  // TBD: hand-rolled intraplate approximation — production use requires proper
+  // stable-craton regionalization (e.g., USGS tectonic summary regions or Flinn-Engdahl zones)
+  if (depth_km < 30) {
+    // Eastern North America (stable craton)
+    if (lon >= -100 && lon <= -60 && lat >= 25 && lat <= 55) return 'intraplate';
+    // Basin and Range / Intermountain West (extensional, not transform)
+    // lat >= 36 excludes southern CA transform zones (e.g., Ridgecrest at 35.8°N)
+    if (lon >= -120 && lon <= -100 && lat >= 36 && lat <= 50) return 'intraplate';
+    // Australian craton
+    if (lon >= 113 && lon <= 155 && lat >= -45 && lat <= -10) return 'intraplate';
+    // Stable African craton (excludes East African Rift)
+    if (lon >= 15 && lon <= 45 && lat >= -30 && lat <= 15) return 'intraplate';
+    // Indian subcontinent interior (away from Himalayan collision zone)
+    if (lon >= 68 && lon <= 88 && lat >= 10 && lat <= 28) return 'intraplate';
+  }
+
   // Pacific ring of fire rough bounds
   if ((lon < -100 && lon > -180 && lat > -60 && lat < 60) ||
       (lon > 100 && lat > -60 && lat < 60)) {
-    return depth_km > 30 ? 'subduction' : 'transform';
+    return depth_km > 20 ? 'subduction' : 'transform';
   }
+
   // Mid-ocean ridge zones
   if (Math.abs(lat) < 10 && (lon > -50 && lon < -10)) return 'transform';
   return 'default';
@@ -184,12 +227,12 @@ export function createAftershockCascade({
   // Surface Displacement", BSSA 84(4). log10(L) = -3.22 + 0.69*M → L in km.
   const ruptureLength = Math.pow(10, -3.22 + 0.69 * mainMag);
   // TBD: empirical calibration needed — the 1.5× match-radius multiplier
-  // is an engineering heuristic; see empirical validation audit.
+  // is an engineering heuristic; see grimoires/loa/calibration/
   const matchRadius = ruptureLength * 1.5;
 
-  // Convert km → degrees using the small-angle approximation
-  // (~111 km per degree of latitude). TBD: empirical calibration needed —
-  // ignores longitude compression at high latitudes.
+  // Convert km → degrees (~111 km per degree of latitude).
+  // TBD: equatorial approximation, distorts at high latitudes;
+  // see grimoires/loa/calibration/
   const degreeRadius = matchRadius / 111;
 
   return {
@@ -303,14 +346,15 @@ export function processAftershockCascade(theatre, bundle) {
 
   // Observed rate extrapolation.
   // TBD: empirical calibration needed — the 0.7 Omori-decay correction
-  // and the blending formula below are engineering heuristics; see
-  // empirical validation audit.
+  // and the blending formula below are engineering heuristics;
+  // see grimoires/loa/calibration/
   const rate = elapsed > 0 ? newCount / elapsed : newCount;
   const projectedTotal = newCount + rate * remaining * 0.7;
 
   // Blend Omori prior with observed projection.
-  // TBD: empirical calibration needed — the 0.1 blending floor ensures the
-  // Omori prior never fully disappears, but the specific value is unsourced.
+  // TBD: empirical calibration needed — the max(0.1, ...) blending floor
+  // ensures the Omori prior never fully disappears, but the specific value
+  // is unsourced; see grimoires/loa/calibration/
   const omoriWeight = Math.max(0.1, 1 - (elapsed / totalWindow));
   const obsWeight = 1 - omoriWeight;
   const blendedExpected =
@@ -371,4 +415,4 @@ export function resolveAftershockCascade(theatre) {
   };
 }
 
-export { BUCKETS, REGIME_PARAMS };
+export { BUCKETS, REGIME_PARAMS, omoriExpectedCount, countToBucketProbabilities, inferRegime };
