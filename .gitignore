@@ -4,5 +4,9 @@ node_modules/
 *.log
 .echelon/state/
 
+# Local state (not project code)
+.beads/
+.claude/settings.local.json
+
 # Loa disabled skills (feature-gated)
 .claude/.skills-disabled/
