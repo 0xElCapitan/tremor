@@ -66,9 +66,9 @@ console.log(tremor.getState());
 const certs = tremor.getCertificates();
 ```
 
-## v0.1.0: Production-Ready Release
+## v0.1.1: Calibration & Safety Release
 
-This release is **production-hardened** with comprehensive safety fixes and governance:
+This release adds empirical calibration and is **production-hardened** with comprehensive safety fixes and governance:
 
 - **5 critical safety fixes**: Race condition prevention, NaN guards, atomic exports, input validation, poll resilience
 - **Comprehensive test suite**: 70 tests across 22 suites (48 baseline + 22 regression tests proving fixes)
@@ -121,6 +121,20 @@ tremor/
 ├── package.json
 └── README.md
 ```
+
+## Calibration Status
+
+| Component | Status | Evidence |
+|-----------|--------|----------|
+| Regional profiles | Measured from catalog | USGS FDSN catalog, M4.5+, 2021–2026 |
+| Omori K (subduction) | Backtest-derived | Run 5, 3 sequences, mean error 6.9% |
+| Omori K (transform) | Backtest-derived | Run 5, 2 sequences, mean error 16.9% |
+| Omori K (intraplate) | Backtest-derived (provisional) | Run 5, 2 sequences, Marginal — review before production use |
+| Omori K (volcanic/default) | Pending calibration | — |
+| Omori c, p, bath_delta | Pending calibration | — |
+| Doubt-price CI | Blocked by data access | Automatic-stage records not preserved in public API |
+| Settlement discounts | Blocked by data access | Same |
+| Quality weights | Blocked by data access | Same |
 
 ## Three calibration refinements
 

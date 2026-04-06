@@ -20,7 +20,7 @@ ecosystem:
 capability_requirements:
   - network: read (scope: usgs.gov, seismicportal.eu, iris.edu)
   - filesystem: write (scope: state)
-version: v0.1.0
+version: v0.1.1
 installation_mode: standalone
 trust_level: L1-local
 -->
@@ -180,6 +180,11 @@ Directory structure:
 - **CHANGELOG.md**: v0.1.0 release notes, known gaps, v0.2 roadmap
 - **GitHub Actions**: CI/CD pipelines (test, lint, build)
 - **Zero new dependencies**: Hard constraint (maintained)
+
+## Calibration Status
+<!-- provenance: OPERATIONAL -->
+
+Empirical calibration status as of v0.1.1: regional profiles are DATA-FACTUAL (USGS FDSN catalog). Omori K is backtest-derived for subduction (Pass) and transform (Pass); intraplate is provisional. c, p, bath_delta, and three calibration studies remain TBD pending automatic-stage data access.
 
 ## Culture
 <!-- provenance: OPERATIONAL -->

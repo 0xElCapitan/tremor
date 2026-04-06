@@ -4,37 +4,33 @@ This roadmap captures the planned evolution of TREMOR beyond v0.1.0. Items
 are grouped by target release. Scope may shift; constraints (zero runtime
 dependencies, full test coverage, no silent corruption) will not.
 
-## v0.2
+## v0.1.1 — Omori Calibration (current, completed)
 
-Theme: **oracle completeness and settlement realism.**
+- Backtest harness against 14 historical sequences across 5 tectonic regimes
+- K values refit for subduction (Pass) and transform (Pass) from empirical targets
+- Intraplate K provisional (Marginal, 2 sequences — human review required before production use)
+- Regional profiles recalibrated from USGS FDSN catalog (M4.5+, 2021–2026)
+- `inferRegime` expanded: South America, Indonesia/Philippines, Caribbean, intraplate cratons
+- Five integrity/resilience issues fixed (race condition, NaN, atomic export, schema validation, poll resilience)
+
+## v0.2.0 — Oracle Expansion (planned)
 
 - **IRIS DMC oracle integration.** Add `src/oracles/iris.js` as a third
-  cross-validation source alongside USGS and EMSC. Update the seismic skill
-  manifest, evidence bundle provenance, and Paradox Engine divergence logic
-  to treat IRIS as a first-class source.
+  cross-validation source alongside USGS and EMSC.
 - **On-chain P&L and gas cost capture.** Wire the RLMF certificate schema to
   real on-chain settlement. Populate the currently-`null` `on_chain_pnl` and
-  `gas_cost` fields and add assertions that they are non-null when a
-  settlement txhash is present.
-- **Empirical calibration pass.** Replace engineering heuristics marked
-  `TBD: empirical calibration needed` with values refit from historical
-  catalog data. Scope for v0.2:
-  - Omori-Utsu regime parameters (`src/theatres/aftershock.js`
-    `REGIME_PARAMS`).
-  - Regional density profiles (`src/processor/regions.js`
-    `REGION_PROFILES`, `DENSITY_NORM`).
-  - Rupture-length match radius multiplier.
+  `gas_cost` fields.
+- **Real-time automatic-stage data collector.** Unblocks Studies 2, 3, 5
+  (doubt-price CI, settlement discounts, quality weights) which are currently
+  blocked because USGS FDSN does not preserve automatic-stage records.
 
-## v0.3
+## v0.3.0 — Full Empirical Calibration (planned, depends on v0.2 collector)
 
-Theme: **feedback loops from real runs.**
-
-- **Omori backtest merged into the main pipeline.** Promote the backtest
-  harness from a one-off script to a committed verification layer that runs
-  against a frozen historical window on every release.
-- **Quality weight refit.** Using accumulated RLMF certificates, refit the
-  magnitude/quality weighting coefficients so that calibration bucket drift
-  shrinks toward zero on out-of-sample events.
+- Doubt-price CI coverage validation (Study 2)
+- Settlement discount empirical derivation (Study 3)
+- Quality composite weight refit (Study 5)
+- Intraplate K refit with larger sequence set
+- Volcanic K calibration (requires different framing than standard Omori)
 
 ## Beyond v0.3
 

@@ -5,6 +5,29 @@ All notable changes to TREMOR will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-04-05
+
+### Fixed
+
+- Single-flight poll scheduling prevents duplicate certificate exports on concurrent polls
+- Fail-closed NaN handling in magnitude/bundle pipeline
+- Atomic certificate export writes (temp file + rename) prevent partial-write corruption
+- USGS/EMSC GeoJSON schema validation at oracle layer
+- Poll failure visibility: `consecutive_poll_failures`, `last_successful_poll`, `pending_exports` in `getState()`
+
+### Changed
+
+- Regional profiles recalibrated from USGS FDSN catalog (M4.5+ reviewed, 2021–2026) — 20 of 24 field-region pairs updated
+- Omori K values refit: subduction (Pass), transform (Pass), intraplate (Marginal/provisional)
+- `inferRegime` expanded to cover South America Andes, Indonesia/Philippines, Caribbean, and five stable-craton intraplate regions
+- All uncited quantitative parameters annotated with `// source:` or `// TBD: empirical calibration needed`
+
+### Known Gaps
+
+- IRIS integration not yet implemented (v0.2 planned)
+- On-chain P&L parameter reserved, not implemented (v0.2 planned)
+- Doubt-price CI, settlement discounts, quality weights blocked on automatic-stage data access
+
 ## [0.1.0] - 2026-04-05
 
 ### Added
@@ -53,4 +76,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Empirical calibration pass for Omori regime parameters and regional
   density profiles.
 
+[0.1.1]: https://github.com/your-org/tremor/releases/tag/v0.1.1
 [0.1.0]: https://github.com/your-org/tremor/releases/tag/v0.1.0
