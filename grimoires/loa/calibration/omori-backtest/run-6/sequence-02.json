@@ -1,0 +1,247 @@
+{
+  "sequence_id": 2,
+  "label": "2010 Maule",
+  "role": "regime-fit",
+  "intraplate_tier": null,
+  "regime_assigned": "subduction",
+  "regime_expected": "subduction",
+  "regime_match": true,
+  "mainshock_event_id": "official20100227063411530_30",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2010-02-27T06:34:11.530Z",
+  "mainshock_magnitude": 8.8,
+  "mainshock_depth_km": 22.9,
+  "mainshock_location": "2010 Maule, Chile Earthquake",
+  "window_end_utc": "2010-03-02T06:34:11.530Z",
+  "omori_params": {
+    "K": 0.22,
+    "c": 0.05,
+    "p": 1.05,
+    "bath_delta": 1.1
+  },
+  "rupture_length_km": 711.2,
+  "match_radius_deg": 9.61,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 310.1,
+      "actual": 128,
+      "relative_error": 1.423
+    },
+    {
+      "window_hours": 24,
+      "projected": 510.9,
+      "actual": 411,
+      "relative_error": 0.243
+    },
+    {
+      "window_hours": 72,
+      "projected": 672.3,
+      "actual": 672,
+      "relative_error": 0
+    }
+  ],
+  "projected_count": 672.3,
+  "actual_count": 672,
+  "projected_bucket": "21+",
+  "actual_bucket": "21+",
+  "bucket_hit": true,
+  "relative_error": 0,
+  "log_error": 0,
+  "probability_score": 0,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "usp000h8g4",
+      "mag": 4.2,
+      "time": "2010-03-02T06:32:03.560Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8g3",
+      "mag": 5.3,
+      "time": "2010-03-02T06:10:53.260Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8g2",
+      "mag": 4.2,
+      "time": "2010-03-02T05:54:26.910Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8g0",
+      "mag": 4.4,
+      "time": "2010-03-02T05:21:58.310Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fz",
+      "mag": 4.3,
+      "time": "2010-03-02T05:16:02.460Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fy",
+      "mag": 4.5,
+      "time": "2010-03-02T05:05:19.290Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fw",
+      "mag": 5.5,
+      "time": "2010-03-02T04:28:45.410Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fv",
+      "mag": 4.7,
+      "time": "2010-03-02T04:19:53.130Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fu",
+      "mag": 5.4,
+      "time": "2010-03-02T04:09:28.400Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8ft",
+      "mag": 5,
+      "time": "2010-03-02T03:48:37.540Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fs",
+      "mag": 5,
+      "time": "2010-03-02T03:44:59.310Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fr",
+      "mag": 4.8,
+      "time": "2010-03-02T03:42:03.130Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fq",
+      "mag": 4.5,
+      "time": "2010-03-02T03:35:54.030Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fp",
+      "mag": 4.2,
+      "time": "2010-03-02T03:25:54.920Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fm",
+      "mag": 4.8,
+      "time": "2010-03-02T02:58:20.640Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fj",
+      "mag": 4.7,
+      "time": "2010-03-02T02:21:00.840Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fh",
+      "mag": 5.1,
+      "time": "2010-03-02T02:09:35.490Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fg",
+      "mag": 4.3,
+      "time": "2010-03-02T02:00:52.730Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fd",
+      "mag": 4.5,
+      "time": "2010-03-02T01:16:48.970Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fc",
+      "mag": 4.9,
+      "time": "2010-03-02T01:12:34.040Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8fb",
+      "mag": 4.9,
+      "time": "2010-03-02T01:03:37.270Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8f7",
+      "mag": 4.6,
+      "time": "2010-03-02T00:16:41.520Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8f6",
+      "mag": 4.4,
+      "time": "2010-03-02T00:10:51.190Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8f4",
+      "mag": 4.9,
+      "time": "2010-03-01T23:26:57.930Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8f1",
+      "mag": 5,
+      "time": "2010-03-01T22:40:18.020Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8f0",
+      "mag": 4.2,
+      "time": "2010-03-01T22:39:12.210Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8ez",
+      "mag": 4.4,
+      "time": "2010-03-01T22:35:17.790Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8ey",
+      "mag": 4.3,
+      "time": "2010-03-01T22:17:33.100Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8ex",
+      "mag": 5,
+      "time": "2010-03-01T21:51:01.000Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000h8ew",
+      "mag": 4.3,
+      "time": "2010-03-01T21:36:58.360Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

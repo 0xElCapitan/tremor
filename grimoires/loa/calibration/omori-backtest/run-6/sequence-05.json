@@ -1,0 +1,247 @@
+{
+  "sequence_id": 5,
+  "label": "2010 El Mayor-Cucapah",
+  "role": "regime-fit",
+  "intraplate_tier": null,
+  "regime_assigned": "transform",
+  "regime_expected": "transform",
+  "regime_match": true,
+  "mainshock_event_id": "ci14607652",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2010-04-04T22:40:42.360Z",
+  "mainshock_magnitude": 7.2,
+  "mainshock_depth_km": 9.987,
+  "mainshock_location": "The 2010 Sierra El Mayor, B.C., Mexico Earthquake",
+  "window_end_utc": "2010-04-07T22:40:42.360Z",
+  "omori_params": {
+    "K": 0.291,
+    "c": 0.03,
+    "p": 1.1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 56,
+  "match_radius_deg": 0.76,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 36.9,
+      "actual": 31,
+      "relative_error": 0.19
+    },
+    {
+      "window_hours": 24,
+      "projected": 55,
+      "actual": 42,
+      "relative_error": 0.31
+    },
+    {
+      "window_hours": 72,
+      "projected": 68.2,
+      "actual": 57,
+      "relative_error": 0.196
+    }
+  ],
+  "projected_count": 68.2,
+  "actual_count": 57,
+  "projected_bucket": "21+",
+  "actual_bucket": "21+",
+  "bucket_hit": true,
+  "relative_error": 0.196,
+  "log_error": 0.177,
+  "probability_score": 0,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "ci10204370",
+      "mag": 4.3,
+      "time": "2010-04-07T21:00:45.380Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14624220",
+      "mag": 4.47,
+      "time": "2010-04-07T06:36:26.750Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci30461759",
+      "mag": 4.28,
+      "time": "2010-04-07T05:21:41.570Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14623804",
+      "mag": 4.27,
+      "time": "2010-04-07T05:21:25.940Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14623588",
+      "mag": 4.36,
+      "time": "2010-04-07T04:23:45.470Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14622036",
+      "mag": 4.23,
+      "time": "2010-04-06T22:09:10.430Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14620676",
+      "mag": 4.28,
+      "time": "2010-04-06T17:31:16.940Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14620452",
+      "mag": 4.24,
+      "time": "2010-04-06T16:23:57.550Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14618772",
+      "mag": 4.51,
+      "time": "2010-04-06T10:06:37.750Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14618236",
+      "mag": 4.67,
+      "time": "2010-04-06T08:12:23.620Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14617100",
+      "mag": 4.56,
+      "time": "2010-04-06T04:12:21.260Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14616628",
+      "mag": 4.46,
+      "time": "2010-04-06T02:33:21.380Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14616484",
+      "mag": 4.46,
+      "time": "2010-04-06T01:58:14.550Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14616380",
+      "mag": 4.51,
+      "time": "2010-04-06T01:23:00.820Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14616212",
+      "mag": 4.11,
+      "time": "2010-04-06T00:56:40.710Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14613932",
+      "mag": 4.26,
+      "time": "2010-04-05T16:25:47.110Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14613876",
+      "mag": 4.08,
+      "time": "2010-04-05T16:16:30.380Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci10177010",
+      "mag": 4.04,
+      "time": "2010-04-05T14:11:46.200Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14613348",
+      "mag": 4.08,
+      "time": "2010-04-05T14:07:04.550Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14613212",
+      "mag": 4.73,
+      "time": "2010-04-05T13:33:05.360Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14612516",
+      "mag": 4.93,
+      "time": "2010-04-05T11:14:14.890Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14612188",
+      "mag": 4.07,
+      "time": "2010-04-05T10:09:24.920Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14612172",
+      "mag": 4,
+      "time": "2010-04-05T10:05:37.080Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14611332",
+      "mag": 4.13,
+      "time": "2010-04-05T07:15:34.590Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14610940",
+      "mag": 4.19,
+      "time": "2010-04-05T06:17:00.520Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hafz",
+      "mag": 4,
+      "time": "2010-04-05T04:55:23.170Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14610172",
+      "mag": 4.29,
+      "time": "2010-04-05T04:10:13.840Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14609924",
+      "mag": 4.4,
+      "time": "2010-04-05T03:32:07.260Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci14609660",
+      "mag": 4.96,
+      "time": "2010-04-05T03:15:24.770Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci30237759",
+      "mag": 4.41,
+      "time": "2010-04-05T03:11:01.740Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

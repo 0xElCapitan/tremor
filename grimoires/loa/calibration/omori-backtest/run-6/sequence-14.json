@@ -1,0 +1,97 @@
+{
+  "sequence_id": 14,
+  "label": "2016 Equatorial Atlantic M7.1",
+  "role": "inference",
+  "intraplate_tier": null,
+  "regime_assigned": "transform",
+  "regime_expected": "default",
+  "regime_match": false,
+  "mainshock_event_id": "us20006uy6",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2016-08-29T04:29:57.860Z",
+  "mainshock_magnitude": 7.1,
+  "mainshock_depth_km": 10,
+  "mainshock_location": "north of Ascension Island",
+  "window_end_utc": "2016-09-01T04:29:57.860Z",
+  "omori_params": {
+    "K": 0.291,
+    "c": 0.03,
+    "p": 1.1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 47.8,
+  "match_radius_deg": 0.65,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 31.1,
+      "actual": 2,
+      "relative_error": 14.55
+    },
+    {
+      "window_hours": 24,
+      "projected": 46.3,
+      "actual": 4,
+      "relative_error": 10.575
+    },
+    {
+      "window_hours": 72,
+      "projected": 57.4,
+      "actual": 5,
+      "relative_error": 10.48
+    }
+  ],
+  "projected_count": 57.4,
+  "actual_count": 5,
+  "projected_bucket": "21+",
+  "actual_bucket": "3-5",
+  "bucket_hit": false,
+  "relative_error": 10.48,
+  "log_error": 2.276,
+  "probability_score": 0.4,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "us10006j7b",
+      "mag": 4.8,
+      "time": "2016-09-01T03:14:19.220Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20006v80",
+      "mag": 4.7,
+      "time": "2016-08-30T04:24:59.870Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us10006rjk",
+      "mag": 4.5,
+      "time": "2016-08-30T03:03:41.250Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20006uzv",
+      "mag": 5,
+      "time": "2016-08-29T08:20:36.620Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us10006jl9",
+      "mag": 4.6,
+      "time": "2016-08-29T05:36:28.870Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

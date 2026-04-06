@@ -1,0 +1,73 @@
+{
+  "sequence_id": 18,
+  "label": "2014 Bárðarbunga",
+  "role": "volcanic",
+  "intraplate_tier": null,
+  "regime_assigned": "default",
+  "regime_expected": "volcanic",
+  "regime_match": false,
+  "mainshock_event_id": "usb000sh06",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2014-09-29T13:43:01.660Z",
+  "mainshock_magnitude": 5.6,
+  "mainshock_depth_km": 10,
+  "mainshock_location": "105 km WNW of Höfn, Iceland",
+  "window_end_utc": "2014-10-02T13:43:01.660Z",
+  "omori_params": {
+    "K": 18,
+    "c": 0.05,
+    "p": 1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 4.4,
+  "match_radius_deg": 0.06,
+  "compute_method": "direct",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 90.9,
+      "actual": 0,
+      "relative_error": null
+    },
+    {
+      "window_hours": 24,
+      "projected": 154.5,
+      "actual": 0,
+      "relative_error": null
+    },
+    {
+      "window_hours": 72,
+      "projected": 208.5,
+      "actual": 1,
+      "relative_error": 207.5
+    }
+  ],
+  "projected_count": 208.5,
+  "actual_count": 1,
+  "projected_bucket": "21+",
+  "actual_bucket": "0-2",
+  "bucket_hit": false,
+  "relative_error": 207.5,
+  "log_error": 4.652,
+  "probability_score": 0.4,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "usb000shga",
+      "mag": 4.6,
+      "time": "2014-09-30T19:24:49.340Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": "Caldera collapse — mainshock definition uncertain"
+}

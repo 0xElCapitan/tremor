@@ -1,0 +1,205 @@
+{
+  "sequence_id": 12,
+  "label": "2020 Monte Cristo Range, Nevada",
+  "role": "regime-fit",
+  "intraplate_tier": "secondary",
+  "regime_assigned": "intraplate",
+  "regime_expected": "intraplate",
+  "regime_match": true,
+  "mainshock_event_id": "nn00725272",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2020-05-15T11:03:27.176Z",
+  "mainshock_magnitude": 6.5,
+  "mainshock_depth_km": 2.7,
+  "mainshock_location": "Monte Cristo Range, NV Earthquake",
+  "window_end_utc": "2020-05-18T11:03:27.176Z",
+  "omori_params": {
+    "K": 0.24,
+    "c": 0.08,
+    "p": 0.95,
+    "bath_delta": 1.3
+  },
+  "rupture_length_km": 18.4,
+  "match_radius_deg": 0.25,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0.001,
+    0.03,
+    0.394,
+    0.569,
+    0.006
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 4.1,
+      "actual": 10,
+      "relative_error": -0.59
+    },
+    {
+      "window_hours": 24,
+      "projected": 7.8,
+      "actual": 16,
+      "relative_error": -0.512
+    },
+    {
+      "window_hours": 72,
+      "projected": 11.3,
+      "actual": 23,
+      "relative_error": -0.509
+    }
+  ],
+  "projected_count": 11.3,
+  "actual_count": 23,
+  "projected_bucket": "11-20",
+  "actual_bucket": "21+",
+  "bucket_hit": false,
+  "relative_error": -0.509,
+  "log_error": -0.668,
+  "probability_score": 0.2936,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "nn00727712",
+      "mag": 4.3,
+      "time": "2020-05-18T02:19:08.415Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00727575",
+      "mag": 4.3,
+      "time": "2020-05-17T21:47:44.646Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00727561",
+      "mag": 4.7,
+      "time": "2020-05-17T21:17:02.474Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00727244",
+      "mag": 4.5,
+      "time": "2020-05-17T11:53:53.336Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00727120",
+      "mag": 4.3,
+      "time": "2020-05-17T08:28:48.506Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00726772",
+      "mag": 4.4,
+      "time": "2020-05-16T23:27:14.582Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00726353",
+      "mag": 4.6,
+      "time": "2020-05-16T11:50:54.310Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00726009",
+      "mag": 4.6,
+      "time": "2020-05-16T04:12:21.434Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725777",
+      "mag": 4.3,
+      "time": "2020-05-15T22:46:30.266Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725752",
+      "mag": 4.3,
+      "time": "2020-05-15T22:15:49.953Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725743",
+      "mag": 4.2,
+      "time": "2020-05-15T21:59:43.287Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725563",
+      "mag": 4.2,
+      "time": "2020-05-15T18:10:32.484Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725546",
+      "mag": 4.7,
+      "time": "2020-05-15T17:50:16.941Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725454",
+      "mag": 4.8,
+      "time": "2020-05-15T15:23:24.676Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725387",
+      "mag": 4.2,
+      "time": "2020-05-15T13:51:37.151Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725345",
+      "mag": 4.3,
+      "time": "2020-05-15T13:02:12.301Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725312",
+      "mag": 4.5,
+      "time": "2020-05-15T12:00:41.572Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725306",
+      "mag": 4.8,
+      "time": "2020-05-15T11:52:07.184Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725296",
+      "mag": 4,
+      "time": "2020-05-15T11:30:16.409Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725291",
+      "mag": 5.1,
+      "time": "2020-05-15T11:26:01.747Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725284",
+      "mag": 4.9,
+      "time": "2020-05-15T11:18:12.392Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725279",
+      "mag": 4,
+      "time": "2020-05-15T11:12:37.268Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00725277",
+      "mag": 4.1,
+      "time": "2020-05-15T11:09:09.140Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": "Walker Lane — transtensional, not quiet craton"
+}

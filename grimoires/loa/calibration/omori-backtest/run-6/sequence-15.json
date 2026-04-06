@@ -1,0 +1,247 @@
+{
+  "sequence_id": 15,
+  "label": "2020 Puerto Rico M6.4",
+  "role": "inference",
+  "intraplate_tier": null,
+  "regime_assigned": "transform",
+  "regime_expected": "default",
+  "regime_match": false,
+  "mainshock_event_id": "pr2020007007",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2020-01-07T08:24:27.370Z",
+  "mainshock_magnitude": 6.4,
+  "mainshock_depth_km": 6,
+  "mainshock_location": "4 km SSE of Indios, Puerto Rico",
+  "window_end_utc": "2020-01-10T08:24:27.370Z",
+  "omori_params": {
+    "K": 0.291,
+    "c": 0.03,
+    "p": 1.1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 15.7,
+  "match_radius_deg": 0.21,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0.001,
+    0.045,
+    0.75,
+    0.204
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 9.3,
+      "actual": 19,
+      "relative_error": -0.511
+    },
+    {
+      "window_hours": 24,
+      "projected": 13.8,
+      "actual": 27,
+      "relative_error": -0.489
+    },
+    {
+      "window_hours": 72,
+      "projected": 17.1,
+      "actual": 35,
+      "relative_error": -0.511
+    }
+  ],
+  "projected_count": 17.1,
+  "actual_count": 35,
+  "projected_bucket": "11-20",
+  "actual_bucket": "21+",
+  "bucket_hit": false,
+  "relative_error": -0.511,
+  "log_error": -0.688,
+  "probability_score": 0.2396,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "us70006xgd",
+      "mag": 4.2,
+      "time": "2020-01-10T08:05:28.195Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020009012",
+      "mag": 4.42,
+      "time": "2020-01-09T11:24:41.410Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020009004",
+      "mag": 4.17,
+      "time": "2020-01-09T05:03:13.290Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020008063",
+      "mag": 4.03,
+      "time": "2020-01-08T23:54:27.620Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020008055",
+      "mag": 4.7,
+      "time": "2020-01-08T20:04:18.060Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020008053",
+      "mag": 4.06,
+      "time": "2020-01-08T18:44:14.560Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020008051",
+      "mag": 4.2,
+      "time": "2020-01-08T15:45:42.950Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020008044",
+      "mag": 4.1,
+      "time": "2020-01-08T09:19:57.520Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020008020",
+      "mag": 4.12,
+      "time": "2020-01-08T03:52:48.500Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020008005",
+      "mag": 4.2,
+      "time": "2020-01-08T00:59:49.760Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007053",
+      "mag": 4,
+      "time": "2020-01-07T20:32:59.340Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007043",
+      "mag": 4.3,
+      "time": "2020-01-07T18:43:46.490Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007037",
+      "mag": 4.2,
+      "time": "2020-01-07T18:10:55.610Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007023",
+      "mag": 4.6,
+      "time": "2020-01-07T16:27:07.510Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007018",
+      "mag": 4.2,
+      "time": "2020-01-07T15:55:11.160Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007014",
+      "mag": 4.12,
+      "time": "2020-01-07T14:39:35.120Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us70006vr9",
+      "mag": 4.4,
+      "time": "2020-01-07T14:23:39.211Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us70006vr1",
+      "mag": 4.2,
+      "time": "2020-01-07T14:04:46.208Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us70006vq3",
+      "mag": 4.4,
+      "time": "2020-01-07T13:00:22.024Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007054",
+      "mag": 4.7,
+      "time": "2020-01-07T12:54:42.450Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us70006vps",
+      "mag": 4.3,
+      "time": "2020-01-07T12:10:44.715Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007010",
+      "mag": 5.6,
+      "time": "2020-01-07T11:18:43.540Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007056",
+      "mag": 4.3,
+      "time": "2020-01-07T11:14:49.740Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us70006vnz",
+      "mag": 4.3,
+      "time": "2020-01-07T11:02:36.999Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007017",
+      "mag": 4.1,
+      "time": "2020-01-07T10:28:10.560Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007009",
+      "mag": 4.08,
+      "time": "2020-01-07T10:13:54.960Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us60007c6b",
+      "mag": 4.7,
+      "time": "2020-01-07T09:42:11.867Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007008",
+      "mag": 4.1,
+      "time": "2020-01-07T09:41:31.110Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007035",
+      "mag": 4,
+      "time": "2020-01-07T09:35:37.680Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "pr2020007006",
+      "mag": 4.1,
+      "time": "2020-01-07T09:08:57.670Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

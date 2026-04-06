@@ -1,0 +1,115 @@
+{
+  "sequence_id": 8,
+  "label": "2008 Wells, Nevada",
+  "role": "regime-fit",
+  "intraplate_tier": "primary",
+  "regime_assigned": "intraplate",
+  "regime_expected": "intraplate",
+  "regime_match": true,
+  "mainshock_event_id": "nn00234425",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2008-02-21T14:16:02.821Z",
+  "mainshock_magnitude": 5.9,
+  "mainshock_depth_km": 7.9,
+  "mainshock_location": "8 km ENE of Wells, Nevada",
+  "window_end_utc": "2008-02-24T14:16:02.821Z",
+  "omori_params": {
+    "K": 0.24,
+    "c": 0.08,
+    "p": 0.95,
+    "bath_delta": 1.3
+  },
+  "rupture_length_km": 7.1,
+  "match_radius_deg": 0.1,
+  "compute_method": "direct",
+  "bucket_probabilities": [
+    0.237,
+    0.547,
+    0.213,
+    0.003,
+    0
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 1.5,
+      "actual": 3,
+      "relative_error": -0.5
+    },
+    {
+      "window_hours": 24,
+      "projected": 2.8,
+      "actual": 5,
+      "relative_error": -0.44
+    },
+    {
+      "window_hours": 72,
+      "projected": 4,
+      "actual": 8,
+      "relative_error": -0.5
+    }
+  ],
+  "projected_count": 4,
+  "actual_count": 8,
+  "projected_bucket": "3-5",
+  "actual_bucket": "6-10",
+  "bucket_hit": false,
+  "relative_error": -0.5,
+  "log_error": -0.588,
+  "probability_score": 0.195,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "nn00288022",
+      "mag": 4.1,
+      "time": "2008-02-24T13:15:27.261Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00287968",
+      "mag": 4.3,
+      "time": "2008-02-23T23:32:40.987Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00235053",
+      "mag": 4.8,
+      "time": "2008-02-22T23:27:45.133Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00286225",
+      "mag": 4.3,
+      "time": "2008-02-22T01:50:05.347Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00234666",
+      "mag": 4.6,
+      "time": "2008-02-21T23:57:50.945Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00234461",
+      "mag": 4.1,
+      "time": "2008-02-21T15:34:25.466Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00517570",
+      "mag": 5.1,
+      "time": "2008-02-21T14:34:55.538Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "nn00235990",
+      "mag": 4.6,
+      "time": "2008-02-21T14:20:51.446Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

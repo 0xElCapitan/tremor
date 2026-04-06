@@ -1,0 +1,247 @@
+{
+  "sequence_id": 1,
+  "label": "2011 Tōhoku",
+  "role": "regime-fit",
+  "intraplate_tier": null,
+  "regime_assigned": "subduction",
+  "regime_expected": "subduction",
+  "regime_match": true,
+  "mainshock_event_id": "official20110311054624120_30",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2011-03-11T05:46:24.120Z",
+  "mainshock_magnitude": 9.1,
+  "mainshock_depth_km": 29,
+  "mainshock_location": "2011 Great Tohoku Earthquake, Japan",
+  "window_end_utc": "2011-03-14T05:46:24.120Z",
+  "omori_params": {
+    "K": 0.22,
+    "c": 0.05,
+    "p": 1.05,
+    "bath_delta": 1.1
+  },
+  "rupture_length_km": 1145.5,
+  "match_radius_deg": 15.48,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 520.5,
+      "actual": 183,
+      "relative_error": 1.844
+    },
+    {
+      "window_hours": 24,
+      "projected": 857.7,
+      "actual": 672,
+      "relative_error": 0.276
+    },
+    {
+      "window_hours": 72,
+      "projected": 1128.6,
+      "actual": 1422,
+      "relative_error": -0.206
+    }
+  ],
+  "projected_count": 1128.6,
+  "actual_count": 1422,
+  "projected_bucket": "21+",
+  "actual_bucket": "21+",
+  "bucket_hit": true,
+  "relative_error": -0.206,
+  "log_error": -0.231,
+  "probability_score": 0,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "usp000hx32",
+      "mag": 4.8,
+      "time": "2011-03-14T05:42:14.640Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx31",
+      "mag": 4.2,
+      "time": "2011-03-14T05:37:18.270Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx30",
+      "mag": 4.7,
+      "time": "2011-03-14T05:27:12.010Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2z",
+      "mag": 4.4,
+      "time": "2011-03-14T05:24:03.380Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2y",
+      "mag": 4.6,
+      "time": "2011-03-14T05:23:01.260Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2x",
+      "mag": 4.8,
+      "time": "2011-03-14T05:19:02.770Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2w",
+      "mag": 4.3,
+      "time": "2011-03-14T05:14:26.300Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2v",
+      "mag": 4.3,
+      "time": "2011-03-14T05:11:09.470Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2u",
+      "mag": 4.5,
+      "time": "2011-03-14T05:09:39.920Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2t",
+      "mag": 4.5,
+      "time": "2011-03-14T04:59:41.950Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2s",
+      "mag": 5,
+      "time": "2011-03-14T04:57:54.330Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2r",
+      "mag": 4.7,
+      "time": "2011-03-14T04:56:22.890Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2q",
+      "mag": 4.9,
+      "time": "2011-03-14T04:48:23.470Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2p",
+      "mag": 4.8,
+      "time": "2011-03-14T04:45:37.800Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2n",
+      "mag": 4.3,
+      "time": "2011-03-14T04:44:10.820Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2m",
+      "mag": 4.2,
+      "time": "2011-03-14T04:38:02.710Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2k",
+      "mag": 4.4,
+      "time": "2011-03-14T04:34:44.050Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2j",
+      "mag": 4.5,
+      "time": "2011-03-14T04:26:18.620Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2h",
+      "mag": 4.5,
+      "time": "2011-03-14T04:20:05.820Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2f",
+      "mag": 4.5,
+      "time": "2011-03-14T03:56:40.090Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2e",
+      "mag": 4.3,
+      "time": "2011-03-14T03:50:03.010Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2d",
+      "mag": 4.6,
+      "time": "2011-03-14T03:39:30.280Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2c",
+      "mag": 4.6,
+      "time": "2011-03-14T03:24:42.870Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2b",
+      "mag": 5.2,
+      "time": "2011-03-14T03:20:41.720Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx2a",
+      "mag": 5.2,
+      "time": "2011-03-14T03:18:46.290Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx28",
+      "mag": 5.4,
+      "time": "2011-03-14T03:15:50.490Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx27",
+      "mag": 4.9,
+      "time": "2011-03-14T03:10:07.860Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx26",
+      "mag": 4.8,
+      "time": "2011-03-14T03:09:55.410Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx25",
+      "mag": 4.6,
+      "time": "2011-03-14T03:02:20.960Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usp000hx24",
+      "mag": 4.5,
+      "time": "2011-03-14T03:01:47.190Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

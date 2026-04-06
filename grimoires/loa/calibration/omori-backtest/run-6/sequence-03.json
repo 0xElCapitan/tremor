@@ -1,0 +1,247 @@
+{
+  "sequence_id": 3,
+  "label": "2014 Iquique",
+  "role": "regime-fit",
+  "intraplate_tier": null,
+  "regime_assigned": "subduction",
+  "regime_expected": "subduction",
+  "regime_match": true,
+  "mainshock_event_id": "usc000nzvd",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2014-04-01T23:46:47.260Z",
+  "mainshock_magnitude": 8.2,
+  "mainshock_depth_km": 25,
+  "mainshock_location": "93 km NW of Iquique, Chile",
+  "window_end_utc": "2014-04-04T23:46:47.260Z",
+  "omori_params": {
+    "K": 0.22,
+    "c": 0.05,
+    "p": 1.05,
+    "bath_delta": 1.1
+  },
+  "rupture_length_km": 274.2,
+  "match_radius_deg": 3.7,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 110,
+      "actual": 73,
+      "relative_error": 0.507
+    },
+    {
+      "window_hours": 24,
+      "projected": 181.3,
+      "actual": 130,
+      "relative_error": 0.395
+    },
+    {
+      "window_hours": 72,
+      "projected": 238.5,
+      "actual": 238,
+      "relative_error": 0.002
+    }
+  ],
+  "projected_count": 238.5,
+  "actual_count": 238,
+  "projected_bucket": "21+",
+  "actual_bucket": "21+",
+  "bucket_hit": true,
+  "relative_error": 0.002,
+  "log_error": 0.002,
+  "probability_score": 0,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "usb000pp21",
+      "mag": 4.3,
+      "time": "2014-04-04T22:39:59.540Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usb000pp1l",
+      "mag": 4.2,
+      "time": "2014-04-04T21:00:06.810Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p5up",
+      "mag": 4,
+      "time": "2014-04-04T20:55:26.550Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p5t5",
+      "mag": 4.6,
+      "time": "2014-04-04T20:32:46.920Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p5h0",
+      "mag": 4.6,
+      "time": "2014-04-04T18:07:33.730Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p6x4",
+      "mag": 4.1,
+      "time": "2014-04-04T17:36:52.270Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usb000pp1a",
+      "mag": 4.1,
+      "time": "2014-04-04T17:36:35.490Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p5cw",
+      "mag": 4.2,
+      "time": "2014-04-04T17:21:41.350Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usb000pp16",
+      "mag": 4,
+      "time": "2014-04-04T16:45:59.800Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p54t",
+      "mag": 4.8,
+      "time": "2014-04-04T16:02:41.100Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p54d",
+      "mag": 4.4,
+      "time": "2014-04-04T15:52:48.240Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p52v",
+      "mag": 4.8,
+      "time": "2014-04-04T15:20:59.360Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p52d",
+      "mag": 4.2,
+      "time": "2014-04-04T15:12:48.570Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4nw",
+      "mag": 4.5,
+      "time": "2014-04-04T10:01:31.080Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4nv",
+      "mag": 4.8,
+      "time": "2014-04-04T09:53:25.130Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4mz",
+      "mag": 5.2,
+      "time": "2014-04-04T09:38:55.020Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4jz",
+      "mag": 4.3,
+      "time": "2014-04-04T07:57:34.040Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4k0",
+      "mag": 4.4,
+      "time": "2014-04-04T07:42:18.720Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4is",
+      "mag": 4.1,
+      "time": "2014-04-04T07:10:27.530Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4g6",
+      "mag": 4.3,
+      "time": "2014-04-04T04:53:50.470Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4fs",
+      "mag": 4.7,
+      "time": "2014-04-04T04:34:28.520Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4en",
+      "mag": 4.2,
+      "time": "2014-04-04T03:45:25.960Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4dr",
+      "mag": 4.4,
+      "time": "2014-04-04T03:18:37.860Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p4a9",
+      "mag": 6.3,
+      "time": "2014-04-04T01:37:50.570Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usb000pnzd",
+      "mag": 4.4,
+      "time": "2014-04-03T23:40:50.580Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p465",
+      "mag": 4.7,
+      "time": "2014-04-03T23:37:51.420Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p44n",
+      "mag": 4.2,
+      "time": "2014-04-03T23:13:20.320Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usb000pnyu",
+      "mag": 4.2,
+      "time": "2014-04-03T23:04:26.260Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usb000pnyr",
+      "mag": 4.3,
+      "time": "2014-04-03T21:14:43.120Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "usc000p3xf",
+      "mag": 4,
+      "time": "2014-04-03T21:08:14.340Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

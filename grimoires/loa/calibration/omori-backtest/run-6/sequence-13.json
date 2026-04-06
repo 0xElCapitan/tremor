@@ -1,0 +1,247 @@
+{
+  "sequence_id": 13,
+  "label": "2016 Kumamoto",
+  "role": "inference",
+  "intraplate_tier": null,
+  "regime_assigned": "transform",
+  "regime_expected": "transform or subduction boundary",
+  "regime_match": true,
+  "mainshock_event_id": "us20005iis",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2016-04-15T16:25:06.220Z",
+  "mainshock_magnitude": 7,
+  "mainshock_depth_km": 10,
+  "mainshock_location": "6 km ESE of Kumamoto, Japan",
+  "window_end_utc": "2016-04-18T16:25:06.220Z",
+  "omori_params": {
+    "K": 0.291,
+    "c": 0.03,
+    "p": 1.1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 40.7,
+  "match_radius_deg": 0.55,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 26.2,
+      "actual": 24,
+      "relative_error": 0.092
+    },
+    {
+      "window_hours": 24,
+      "projected": 38.9,
+      "actual": 38,
+      "relative_error": 0.024
+    },
+    {
+      "window_hours": 72,
+      "projected": 48.3,
+      "actual": 45,
+      "relative_error": 0.073
+    }
+  ],
+  "projected_count": 48.3,
+  "actual_count": 45,
+  "projected_bucket": "21+",
+  "actual_bucket": "21+",
+  "bucket_hit": true,
+  "relative_error": 0.073,
+  "log_error": 0.069,
+  "probability_score": 0,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "us10005byj",
+      "mag": 4.4,
+      "time": "2016-04-18T12:18:25.280Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005jgz",
+      "mag": 5.5,
+      "time": "2016-04-18T11:42:00.220Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005jbh",
+      "mag": 4.6,
+      "time": "2016-04-17T23:35:43.590Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005j6z",
+      "mag": 4.7,
+      "time": "2016-04-17T10:23:41.130Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005j4q",
+      "mag": 4.3,
+      "time": "2016-04-17T04:14:00.500Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005j23",
+      "mag": 4.6,
+      "time": "2016-04-16T19:46:49.290Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005j1s",
+      "mag": 4.2,
+      "time": "2016-04-16T18:30:22.760Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005j0z",
+      "mag": 4.7,
+      "time": "2016-04-16T15:14:52.990Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005j01",
+      "mag": 4.5,
+      "time": "2016-04-16T13:05:58.860Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005izm",
+      "mag": 4.5,
+      "time": "2016-04-16T12:05:06.020Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iyx",
+      "mag": 4.7,
+      "time": "2016-04-16T08:40:20.280Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iye",
+      "mag": 5.1,
+      "time": "2016-04-16T07:02:01.850Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005ixz",
+      "mag": 4.6,
+      "time": "2016-04-16T05:27:05.580Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005ixw",
+      "mag": 4.6,
+      "time": "2016-04-16T05:03:57.930Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iwz",
+      "mag": 4.8,
+      "time": "2016-04-16T02:02:51.200Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iwy",
+      "mag": 4.3,
+      "time": "2016-04-16T01:38:53.880Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iwc",
+      "mag": 5.2,
+      "time": "2016-04-16T00:48:32.810Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iw0",
+      "mag": 4.3,
+      "time": "2016-04-16T00:16:29.290Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iut",
+      "mag": 4.5,
+      "time": "2016-04-15T23:20:42.030Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iul",
+      "mag": 4.6,
+      "time": "2016-04-15T23:08:51.490Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iug",
+      "mag": 4.1,
+      "time": "2016-04-15T22:42:33.640Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iu7",
+      "mag": 4.6,
+      "time": "2016-04-15T22:23:55.040Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005itt",
+      "mag": 4.5,
+      "time": "2016-04-15T21:40:01.520Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005kzm",
+      "mag": 4.3,
+      "time": "2016-04-15T21:31:03.890Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005it7",
+      "mag": 4.5,
+      "time": "2016-04-15T20:34:13.850Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005iqi",
+      "mag": 4.7,
+      "time": "2016-04-15T19:51:24.040Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005kzw",
+      "mag": 4.6,
+      "time": "2016-04-15T19:24:27.770Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005ipp",
+      "mag": 4.4,
+      "time": "2016-04-15T19:18:15.750Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005kze",
+      "mag": 4.5,
+      "time": "2016-04-15T19:05:49.150Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "us20005l03",
+      "mag": 4.6,
+      "time": "2016-04-15T19:01:58.950Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

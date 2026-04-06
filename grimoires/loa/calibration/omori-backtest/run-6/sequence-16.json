@@ -1,0 +1,115 @@
+{
+  "sequence_id": 16,
+  "label": "2018 Kīlauea",
+  "role": "volcanic",
+  "intraplate_tier": null,
+  "regime_assigned": "transform",
+  "regime_expected": "volcanic",
+  "regime_match": false,
+  "mainshock_event_id": "hv70116556",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2018-05-04T22:32:54.650Z",
+  "mainshock_magnitude": 6.9,
+  "mainshock_depth_km": 5.81,
+  "mainshock_location": "18 km SSW of Leilani Estates, Hawaii",
+  "window_end_utc": "2018-05-07T22:32:54.650Z",
+  "omori_params": {
+    "K": 0.291,
+    "c": 0.03,
+    "p": 1.1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 34.8,
+  "match_radius_deg": 0.47,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 22,
+      "actual": 6,
+      "relative_error": 2.667
+    },
+    {
+      "window_hours": 24,
+      "projected": 32.7,
+      "actual": 7,
+      "relative_error": 3.671
+    },
+    {
+      "window_hours": 72,
+      "projected": 40.6,
+      "actual": 8,
+      "relative_error": 4.075
+    }
+  ],
+  "projected_count": 40.6,
+  "actual_count": 8,
+  "projected_bucket": "21+",
+  "actual_bucket": "6-10",
+  "bucket_hit": false,
+  "relative_error": 4.075,
+  "log_error": 1.531,
+  "probability_score": 0.4,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "hv70123771",
+      "mag": 4.25,
+      "time": "2018-05-06T13:26:07.980Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "hv70118241",
+      "mag": 4.06,
+      "time": "2018-05-05T06:11:08.990Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "hv70117676",
+      "mag": 4.4,
+      "time": "2018-05-05T03:30:15.740Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "hv70117211",
+      "mag": 4.75,
+      "time": "2018-05-05T01:20:27.840Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "hv70117041",
+      "mag": 4.93,
+      "time": "2018-05-05T00:37:10.680Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "hv70116601",
+      "mag": 4.66,
+      "time": "2018-05-04T22:48:19.500Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "hv70116581",
+      "mag": 4.64,
+      "time": "2018-05-04T22:42:42.500Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "hv70116566",
+      "mag": 4.61,
+      "time": "2018-05-04T22:37:18.600Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": "Mainshock definition uncertain — using largest reviewed event"
+}

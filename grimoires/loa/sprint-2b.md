@@ -1,60 +1,127 @@
-# TREMOR Calibration Sprint — Prompt B
+# TREMOR Calibration Sprint — Prompt B (v2)
 # Omori Regime Backtest (Study 1)
 
-**Prerequisite**: Prompt A must be complete. `grimoires/loa/calibration/` must exist with findings files from Studies 2–6. This prompt references the committed protocol at `grimoires/loa/calibration/omori-backtest-protocol.md` — read that file in full before writing any code.
+**Prerequisite**: `grimoires/loa/calibration/omori-backtest-protocol.md` must exist at **version 2.0**. Read the protocol in full before writing any code. The protocol is authoritative — this prompt is a harness specification, not a source of truth. Where they conflict, the protocol wins.
 
-**Scope**: Build and run the Omori backtest harness against the 14 committed sequences. Score all sequences. Produce per-regime findings and a diagnostic report. Do not refit any parameter values. Do not modify any file in `src/`.
+**Scope**: Build and run the Omori backtest harness against the 19 committed sequences. Score all sequences per protocol v2.0 requirements including partial-window analysis. Produce per-regime findings and a diagnostic report in a versioned run directory. Do not refit any parameter values. Do not modify any file in `src/`.
 
-**Stop condition**: After the diagnostic report is written, summarize findings per regime, state the bias diagnosis for each (K / c / p / inferRegime per the protocol's diagnosis order), and stop. Parameter refit is a separate sprint requiring human review of this report first.
+**Stop condition**: Diagnostic report written in a versioned run directory, completion summary produced. Stop. Parameter refit is a separate sprint.
+
+**Before editing anything**: verify all file paths, event IDs, and function names against the live repo. Treat every reference in this prompt as a hint, not ground truth. If something has drifted, use the live state and note it.
 
 **Hard constraints**:
 - Zero new runtime npm dependencies
-- Protocol definitions are frozen — do not deviate from mainshock definition, window rules, count rules, or scoring metrics as stated in `omori-backtest-protocol.md`
-- Do not adjust any protocol definition after seeing results — if a definition appears wrong, flag it in the report and stop; do not silently fix it
-- All output to `grimoires/loa/calibration/omori-backtest/`
+- Do not modify any file in `src/`, `test/`, or existing run directories
+- Protocol definitions are frozen — do not deviate from mainshock definition, window rules, count rules, or scoring metrics
+- If a protocol definition appears wrong, flag it and stop — do not silently fix it
+- No duplicate math — the harness must call TREMOR's own integration logic, not reimplement it
+- All output to a new versioned run directory — do not overwrite prior runs
 
 ---
 
-## Pre-flight
+## Pre-flight (blocking — complete all before writing harness code)
 
-1. Read `grimoires/loa/calibration/omori-backtest-protocol.md` in full
-2. Confirm all 14 sequence event IDs are present in the protocol
-3. Verify that `src/theatres/aftershock.js` exports or exposes the functions needed to compute the Omori prior externally — specifically the integrated count over a time window. If not directly exported, write a thin test harness that requires the module and calls it without modifying the module itself. **If the integration logic cannot be invoked from the harness without re-implementing it, stop. Write `grimoires/loa/calibration/omori-backtest/interface-blocker.md` describing exactly what interface is missing and what would need to be exported. Do not duplicate the integration math in `scripts/omori-backtest.js` — a backtest running a copy of the logic is not a backtest of TREMOR.**
-4. Verify `src/processor/regions.js` exports `inferRegime` or equivalent — needed to test regime assignment for inference sequences
+### 1. Verify protocol version
+
+Confirm `grimoires/loa/calibration/omori-backtest-protocol.md` is version 2.0. If it is an earlier version, stop and ask for the correct file. Do not proceed against a stale protocol.
+
+### 2. Verify run directory
+
+Check what run directories already exist:
+
+```bash
+ls grimoires/loa/calibration/omori-backtest/
+```
+
+Prior runs (run-5/, sequence-01.json through sequence-14.json, diagnostic-report.md) must not be overwritten. Determine the next run number and write all outputs to:
+
+```
+grimoires/loa/calibration/omori-backtest/run-6/
+```
+
+Create this directory before writing anything.
+
+### 3. Verify interface — no duplicate math
+
+Confirm that `src/theatres/aftershock.js` exports the following functions and that they can be called externally without re-implementing the integration math:
+
+- `omoriExpectedCount(params, mainMag, thresholdMag, windowHours)` — must support partial windows (6h, 24h, 72h)
+- `countToBucketProbabilities(expectedCount)`
+- `inferRegime(depth_km, lat, lon)`
+
+If any function is missing or cannot be invoked without re-implementing logic: write `grimoires/loa/calibration/omori-backtest/run-6/interface-blocker.md` describing the gap and stop. A backtest running a copy of the math is not a backtest of TREMOR.
+
+### 4. Verify output directory support
+
+Check whether `scripts/omori-backtest.js` supports an output directory argument (e.g., `OMORI_OUTPUT_DIR` env var). If not, add env var support before running:
+
+```javascript
+const OUTPUT_DIR = process.env.OMORI_OUTPUT_DIR 
+  || 'grimoires/loa/calibration/omori-backtest';
+```
+
+If adding env var support would require changes outside `scripts/omori-backtest.js`, stop and write an interface-blocker note. Do not risk writing to the wrong directory.
+
+### 5. Verify sequence event IDs
+
+For the first 3 sequences in each regime tier, spot-check the event ID against the USGS event page before running. If any ID resolves to the wrong event, fetch the correct event by time and location, note the corrected ID in the run-6 output, and continue. Do not silently substitute without logging.
 
 ---
 
 ## Harness architecture
 
-Write `scripts/omori-backtest.js`. Structure:
+Update `scripts/omori-backtest.js` to support:
+- 19 sequences (was 14)
+- Primary / secondary intraplate split
+- Three partial-window outputs per sequence (6h, 24h, 72h) — required, not optional
+- Truncation detection and pagination per protocol
+- Reviewed-status fallback rule for international sequences
+- n= counts on all regime verdicts
+- Configurable output directory via `OMORI_OUTPUT_DIR`
+
+Structure:
 
 ```
-1. For each sequence in the committed list:
-   a. Fetch catalog from USGS FDSN (reviewed events only, per protocol count rules)
-   b. Apply mainshock definition per protocol
-   c. Apply 72-hour window per protocol
-   d. Apply count rules per protocol (M≥4.0, matchRadius, non-tectonic exclusions)
-   e. Record actual count
-   f. Run inferRegime() on mainshock feature — record assigned regime
-   g. Compute Omori projected count using TREMOR's own integration logic
-   h. Score: projected count, actual count, bucket hit, relative error, log error
-   i. Write per-sequence result to grimoires/loa/calibration/omori-backtest/<sequence-id>.json
+For each sequence:
+  a. Fetch mainshock from USGS by event ID — verify identity (lat/lon/depth/mag within tolerance)
+  b. Fetch aftershock catalog (FDSN, reviewed only, matchRadius, M≥4.0, non-tectonic excluded)
+  c. Apply truncation rule — if result count equals limit, paginate; if pagination fails, mark NON-COMPARABLE
+  d. Apply reviewed-status check for international sequences (Petermann, Botswana) — if insufficient, apply fallback rule
+  e. Run inferRegime() — record assigned regime, compare to expected
+  f. Compute Omori projected count at t=6h, t=24h, t=72h using TREMOR's own omoriExpectedCount()
+  g. Record actual count at each window from the fetched catalog
+  h. Score: bucket hit (72h), relative error (72h), log error (72h), Brier if available
+  i. Write per-sequence JSON to run-6/
 
-2. Aggregate results by role (regime-fit / inference / volcanic)
-3. For regime-fit sequences only: compute per-regime bucket hit rate and mean relative error
-4. Apply protocol result classification (Pass / Marginal / Fail) per regime
-5. Write diagnostic report
+After all sequences:
+  j. Aggregate regime-fit results — primary intraplate and secondary intraplate separately
+  k. Apply Pass/Marginal/Fail thresholds with n= counts
+  l. Run bias diagnosis per regime using time-signature across 6h/24h/72h
+  m. Write diagnostic report to run-6/diagnostic-report.md
 ```
 
 ---
 
-## FDSN query for each sequence
+## FDSN query requirements
+
+### Mainshock fetch
+
+```
+https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson
+  &eventid=<usgs_event_id>
+```
+
+Verify identity: lat/lon within 0.5°, magnitude within 0.3, depth within 10 km. If verification fails, log discrepancy and halt that sequence — do not proceed with an unverified mainshock.
+
+### Aftershock fetch
 
 ```
 https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson
   &starttime=<mainshock_utc>
   &endtime=<mainshock_utc + 72h>
   &minmagnitude=4.0
+  &limit=20000
+  &offset=<offset>
   &minlatitude=<matchRadius bbox>
   &maxlatitude=<matchRadius bbox>
   &minlongitude=<matchRadius bbox>
@@ -63,94 +130,111 @@ https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson
   &reviewstatus=reviewed
 ```
 
-Exclude the mainshock itself from the aftershock count (match by event ID or by exact origin time).
-Exclude events with `type: "quarry blast"` or `type: "explosion"`.
-Add 500ms delay between sequence queries.
+### Truncation rule (protocol requirement, not optional)
 
-For large sequences (Tōhoku, Maule): the FDSN `limit` parameter defaults to 20000 — set it explicitly and check whether the result count equals the limit. If it does, paginate or note truncation in the report.
+After every FDSN aftershock query:
+1. If result count equals `limit` (20000): flag sequence as **TRUNCATED**, paginate using `offset` increments
+2. If pagination fails or cannot complete: mark sequence as **NON-COMPARABLE**, exclude from regime verdicts, document in diagnostic report
+3. Tōhoku and Maule are the highest-risk sequences for truncation — handle them with care
+
+### International review status check
+
+For Petermann (us10005iyk) and Botswana (us10008e3k): after fetching, verify that returned events carry `properties.status === 'reviewed'`. If fewer than 80% of events in the window are reviewed status:
+1. Flag the sequence as **COVERAGE-UNCERTAIN**
+2. Apply fallback rule: exclude from primary K/c/p conclusions, report as robustness-only
+3. Replace with next pre-listed backup sequence in this priority order: Wells → Lincoln → Monte Cristo
+4. Document the substitution in the diagnostic report
+
+Add 500ms delay between all sequence queries.
 
 ---
 
-## Sequence list with committed IDs
+## Sequence list
 
-All definitions from `omori-backtest-protocol.md`. Reproduce here for agent reference — protocol document is authoritative if any conflict.
+All definitions from protocol v2.0. Protocol is authoritative. Event IDs here are reproduced for convenience — verify against protocol before using.
 
-### Regime-fit sequences
+### Subduction (regime-fit)
 
-| ID | Sequence | Regime | Mainshock UTC | USGS event ID |
-|----|----------|--------|---------------|---------------|
-| 1 | 2011 Tōhoku | subduction | 2011-03-11 05:46:24 | usp000hvnu |
-| 2 | 2010 Maule | subduction | 2010-02-27 06:34:11 | usp000h60h |
-| 3 | 2014 Iquique | subduction | 2014-04-01 23:46:47 | usc000nzvd |
-| 4 | 2019 Ridgecrest | transform | 2019-07-06 03:19:53 | ci38457511 |
-| 5 | 2010 El Mayor-Cucapah | transform | 2010-04-04 22:40:42 | usp000hb3e |
-| 6 | 2011 Mineral, Virginia | intraplate | 2011-08-23 17:51:04 | se609212 |
-| 7 | 2020 Magna, Utah | intraplate | 2020-03-18 13:09:46 | uu60363602 |
+| ID | Sequence | Mainshock UTC | Event ID |
+|----|----------|---------------|----------|
+| 1 | 2011 Tōhoku | 2011-03-11T05:46:24Z | `official20110311054624120_30` |
+| 2 | 2010 Maule | 2010-02-27T06:34:11Z | `official20100227063411530_30` |
+| 3 | 2014 Iquique | 2014-04-01T23:46:47Z | `usc000nzvd` |
 
-**Note on USGS event IDs**: treat these as best-available hints. Verify each against `https://earthquake.usgs.gov/earthquakes/eventpage/<id>` before running. If an ID resolves to the wrong event, log the discrepancy, fetch the correct event by time/location, and note the corrected ID in the report.
+### Transform (regime-fit)
 
-### Regime-inference / edge-case sequences
+| ID | Sequence | Mainshock UTC | Event ID |
+|----|----------|---------------|----------|
+| 4 | 2019 Ridgecrest | 2019-07-06T03:19:53Z | `ci38457511` |
+| 5 | 2010 El Mayor-Cucapah | 2010-04-04T22:40:42Z | `ci14607652` |
 
-| ID | Sequence | Purpose | Expected regime |
-|----|----------|---------|-----------------|
-| 8 | 2016 Kumamoto | Complex sequence, foreshock ambiguity | transform or subduction boundary |
-| 9 | 2008 Wells, Nevada | Basin and Range ambiguity | default or intraplate |
-| 10 | 2016 Equatorial Atlantic M7.1 | Outside bbox, open ocean | default |
-| 11 | 2020 Puerto Rico M6.4 | Bbox boundary, oblique normal faulting | default |
+### Intraplate primary (regime-fit — use for K/c/p conclusions)
 
-Event IDs for 10 and 11: `us20006uy6` and `us70006vll` respectively (verified by human, treat as authoritative).
+| ID | Sequence | Mainshock UTC | Event ID | Caveat |
+|----|----------|---------------|----------|--------|
+| 6 | 2011 Mineral, Virginia | 2011-08-23T17:51:04Z | `se609212` | — |
+| 7 | 2020 Magna, Utah | 2020-03-18T13:09:46Z | `uu60363602` | — |
+| 8 | 2008 Wells, Nevada | 2008-02-21T14:16:02Z | `nn00234425` | — |
+| 9 | 2016 Petermann Ranges, Australia | 2016-05-20T18:14:04Z | `us10005iyk` | International — verify reviewed status |
+| 10 | 2017 Moijabana, Botswana | 2017-04-03T17:40:18Z | `us10008e3k` | International — verify reviewed status |
 
-For inference sequences: record `inferRegime()` output and compare to expected. Do not use these results for K/c/p calibration conclusions. Report them separately.
+### Intraplate secondary (sensitivity-only — do not use to establish or overturn primary verdict)
 
-### Volcanic sequences (robustness / stress-test)
+| ID | Sequence | Mainshock UTC | Event ID | Why secondary |
+|----|----------|---------------|----------|---------------|
+| 11 | 2017 Lincoln, Montana | 2017-07-06T06:30:17Z | `us10009757` | Intermountain Seismic Belt — active extensional zone |
+| 12 | 2020 Monte Cristo Range, Nevada | 2020-05-15T11:03:27Z | `nn00725272` | Walker Lane — transtensional, not quiet craton |
+
+Score secondary sequences but report them in a separate section. Do not include in regime verdict calculations.
+
+### Regime-inference / edge-case (do not use for K/c/p conclusions)
+
+| ID | Sequence | Event ID | Expected regime |
+|----|----------|----------|-----------------|
+| 13 | 2016 Kumamoto | — | transform or subduction boundary |
+| 14 | 2016 Equatorial Atlantic M7.1 | `us20006uy6` | default (authoritative) |
+| 15 | 2020 Puerto Rico M6.4 | `us70006vll` | default (authoritative) |
+
+### Volcanic (robustness / stress-test only)
 
 | ID | Sequence | Note |
 |----|----------|------|
-| 12 | 2018 Kīlauea | High-volume swarm, mainshock definition may be ambiguous — document which event is used |
-| 13 | 2021 La Palma | European catalog, note if USGS coverage is thinner |
-| 14 | 2014 Bárðarbunga | High-volume, likely mainshock definition challenge |
+| 16 | 2018 Kīlauea | Mainshock definition uncertain — document which event used |
+| 17 | 2021 La Palma | European catalog — note USGS coverage quality |
+| 18 | 2014 Bárðarbunga | Caldera collapse — mainshock definition uncertain |
 
-For volcanic sequences: if mainshock is ambiguous per the protocol definition, document the ambiguity, pick the largest reviewed event, and flag the sequence as "mainshock-definition-uncertain" in the report. Do not exclude — run it and label the result accordingly.
-
----
-
-## Scoring per sequence
-
-Compute all four metrics per the protocol. No exceptions.
-
-```javascript
-const relativeError = (projected - actual) / actual;  // signed
-const logError = Math.log(projected + 1) - Math.log(actual + 1);
-const bucketHit = actualBucket === projectedBucket;  // boolean
-// probabilityScore: if TREMOR outputs bucket probabilities, compute Brier; else null
-```
-
-Where `actualBucket` is determined by TREMOR's own bucket boundaries:
-- 0–2 aftershocks
-- 3–5
-- 6–10
-- 11–20
-- 21+
+For volcanic: pick largest reviewed event as mainshock per protocol. Flag as "mainshock-definition-uncertain" in output. Do not exclude.
 
 ---
 
 ## Per-sequence output format
 
-Write `grimoires/loa/calibration/omori-backtest/<sequence-id>.json`:
+Write `grimoires/loa/calibration/omori-backtest/run-6/sequence-<id>.json`:
 
 ```json
 {
   "sequence_id": 1,
   "label": "2011 Tōhoku",
   "role": "regime-fit",
+  "intraplate_tier": null,
   "regime_assigned": "subduction",
   "regime_expected": "subduction",
   "regime_match": true,
-  "mainshock_event_id": "usp000hvnu",
+  "mainshock_event_id": "official20110311054624120_30",
+  "mainshock_event_id_verified": true,
   "mainshock_utc": "2011-03-11T05:46:24Z",
   "window_end_utc": "2011-03-14T05:46:24Z",
-  "actual_count": 0,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "partial_windows": [
+    { "window_hours": 6,  "projected": 0, "actual": 0, "relative_error": 0 },
+    { "window_hours": 24, "projected": 0, "actual": 0, "relative_error": 0 },
+    { "window_hours": 72, "projected": 0, "actual": 0, "relative_error": 0 }
+  ],
   "projected_count": 0,
+  "actual_count": 0,
   "bucket_hit": false,
   "relative_error": 0.0,
   "log_error": 0.0,
@@ -159,44 +243,120 @@ Write `grimoires/loa/calibration/omori-backtest/<sequence-id>.json`:
 }
 ```
 
+`intraplate_tier` should be `"primary"`, `"secondary"`, or `null` for non-intraplate sequences.
+
+`aftershock_status` should be one of: `"complete"`, `"truncated-paginated"`, `"non-comparable"`, `"coverage-uncertain"`.
+
 ---
 
-## Bias diagnosis (run after all sequences complete)
+## Scoring
 
-Per the protocol's diagnosis order — check time-signature first, not just total count:
+### Required at three windows (not optional)
 
-For each regime with ≥2 regime-fit sequences:
-1. Plot (or tabulate) projected vs actual count at t=6h, t=24h, t=72h if TREMOR's integration supports partial windows. If not, use total 72h count only and note the limitation.
-2. Apply diagnosis order:
-   - Wrong at t=0–6h → suspect `c`
-   - Broadly high/low across full window → suspect `K`
-   - Starts correct, drifts by t=72h → suspect `p`
-   - Varies by regime without time signature → suspect `inferRegime`
-3. State which parameter is suspected per regime. Do not recommend a specific new value — that is the refit sprint.
+```javascript
+// For each window (6h, 24h, 72h):
+const projected = omoriExpectedCount(regimeParams, mainMag, 4.0, windowHours);
+const actual = catalogEvents.filter(e => 
+  new Date(e.properties.time) <= mainshockTime + windowHours * 3600000
+).length;
+const relativeError = (projected - actual) / actual; // guard: actual === 0 → null
+```
+
+If `actual === 0` at any window: record relative error as `null` for that window, not `Infinity`. Do not let a zero-aftershock window crash the harness or corrupt other sequences.
+
+### 72h metrics for verdict
+
+```javascript
+const relativeError72 = (projected72 - actual72) / actual72;
+const logError = Math.log(projected72 + 1) - Math.log(actual72 + 1);
+const bucketHit = actualBucket === projectedBucket;
+```
+
+Bucket boundaries per TREMOR: 0–2, 3–5, 6–10, 11–20, 21+.
+
+---
+
+## Bias diagnosis
+
+For each regime with ≥2 primary regime-fit sequences, inspect the three-window time-signature before drawing conclusions:
+
+| Pattern | Suspect |
+|---------|---------|
+| Error disproportionately large at t=6h relative to t=24h and t=72h | `c` |
+| Error roughly uniform across all three windows | `K` |
+| Error small at t=6h, grows by t=72h | `p` |
+| Error varies by regime with no consistent time pattern | `inferRegime` assignment |
+
+State the suspected parameter per regime. Do not recommend a specific new value — that is the refit sprint.
 
 ---
 
 ## Diagnostic report
 
-Write `grimoires/loa/calibration/omori-backtest/diagnostic-report.md`:
+Write `grimoires/loa/calibration/omori-backtest/run-6/diagnostic-report.md`.
 
-**Sections**:
+Label at the top:
+```
+Run 6 — Protocol v2.0, 19 sequences, primary/secondary intraplate split.
+Prior runs preserved at grimoires/loa/calibration/omori-backtest/
+```
 
-1. **Regime-fit results** — per-regime table: bucket hit rate, mean relative error, mean log error, Pass/Marginal/Fail per protocol thresholds
-2. **Bias diagnosis per regime** — which parameter is suspected and why, based on time-signature analysis
-3. **Regime-inference results** — did `inferRegime()` assign the expected regime for sequences 8–11? Note any misassignments.
-4. **Volcanic robustness results** — how did the volcanic sequences behave? Note mainshock-definition challenges and any sequences where Omori framing clearly breaks down.
-5. **Protocol adherence notes** — any place where a protocol definition was ambiguous or appeared incorrect. Do not silently adjust — flag and describe.
-6. **Recommended next steps** — which regimes need refit (Fail), which need monitoring (Marginal), which pass. For each Fail regime, state which parameter to refit first per the bias diagnosis.
+**Required sections**:
 
-**Label throughout**: Phase 1 diagnostic backtest. Not final calibration proof.
+**1. Regime-fit results — primary sequences only**
+
+Per-regime table. Every verdict must include n=:
+
+| Regime | n | Bucket hit rate | Mean rel error | Mean log error | Verdict |
+|--------|---|-----------------|----------------|----------------|---------|
+| subduction | 3 | ... | ... | ... | Pass (n=3) |
+| transform | 2 | ... | ... | ... | ... |
+| intraplate (primary) | up to 5 | ... | ... | ... | ... |
+
+**2. Intraplate secondary results** (separate section, clearly labeled sensitivity-only)
+
+Same table format but labeled: "Sensitivity-only — do not use to establish or overturn primary intraplate verdict."
+
+**3. Bias diagnosis per regime**
+
+Time-signature analysis using the three-window data. State suspected parameter per regime.
+
+**4. Regime-inference results**
+
+`inferRegime()` output vs expected for sequences 13–15.
+
+**5. Volcanic robustness results**
+
+Sequences 16–18. Mainshock definition notes. Do not score against protocol thresholds.
+
+**6. Truncation and coverage notes**
+
+List any sequences marked TRUNCATED, NON-COMPARABLE, or COVERAGE-UNCERTAIN. State what happened to each (paginated successfully, excluded, substituted).
+
+**7. Protocol adherence notes**
+
+Any place a protocol definition was ambiguous or appeared wrong. Flag and describe — do not silently fix.
+
+**8. Recommended next steps**
+
+Which regimes need refit (Fail), which need monitoring (Marginal), which pass. For Fail regimes, state suspected parameter per bias diagnosis. Keep conclusions scoped to what the sample size supports.
 
 ---
 
 ## Completion summary expected
 
-1. Confirm all 14 sequences ran (or explain why any were skipped)
-2. State overall regime-fit Pass/Marginal/Fail counts
-3. Name the single highest-priority refit target if any regimes Fail
-4. List any protocol adherence flags
-5. Stop. Do not refit parameters. Do not modify `src/theatres/aftershock.js`.
+1. Confirm how many sequences ran vs skipped, with reasons for any skips
+2. State regime-fit verdicts with n= for each
+3. Note any truncation or coverage issues
+4. Name highest-priority refit target if any regimes Fail
+5. List protocol adherence flags
+6. Stop. Do not refit parameters. Do not modify `src/`.
+
+Run as:
+
+```bash
+OMORI_OUTPUT_DIR=grimoires/loa/calibration/omori-backtest/run-6 node scripts/omori-backtest.js
+```
+
+Verify prior run artifacts are untouched after execution before reporting done.
+

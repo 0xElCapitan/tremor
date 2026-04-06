@@ -1,0 +1,247 @@
+{
+  "sequence_id": 4,
+  "label": "2019 Ridgecrest",
+  "role": "regime-fit",
+  "intraplate_tier": null,
+  "regime_assigned": "transform",
+  "regime_expected": "transform",
+  "regime_match": true,
+  "mainshock_event_id": "ci38457511",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2019-07-06T03:19:53.040Z",
+  "mainshock_magnitude": 7.1,
+  "mainshock_depth_km": 8,
+  "mainshock_location": "Ridgecrest Earthquake Sequence",
+  "window_end_utc": "2019-07-09T03:19:53.040Z",
+  "omori_params": {
+    "K": 0.291,
+    "c": 0.03,
+    "p": 1.1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 47.8,
+  "match_radius_deg": 0.65,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 31.1,
+      "actual": 56,
+      "relative_error": -0.445
+    },
+    {
+      "window_hours": 24,
+      "projected": 46.3,
+      "actual": 65,
+      "relative_error": -0.288
+    },
+    {
+      "window_hours": 72,
+      "projected": 57.4,
+      "actual": 67,
+      "relative_error": -0.143
+    }
+  ],
+  "projected_count": 57.4,
+  "actual_count": 67,
+  "projected_bucket": "21+",
+  "actual_bucket": "21+",
+  "bucket_hit": true,
+  "relative_error": -0.143,
+  "log_error": -0.152,
+  "probability_score": 0,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [
+    {
+      "id": "ci38475431",
+      "mag": 4.16,
+      "time": "2019-07-07T11:22:16.240Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38472279",
+      "mag": 4.53,
+      "time": "2019-07-07T05:38:15.480Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38469375",
+      "mag": 4.5,
+      "time": "2019-07-06T23:50:41.990Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38465703",
+      "mag": 4.14,
+      "time": "2019-07-06T16:36:05.820Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38463551",
+      "mag": 4.5,
+      "time": "2019-07-06T13:06:55.260Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38462679",
+      "mag": 4.12,
+      "time": "2019-07-06T11:53:08.090Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38461879",
+      "mag": 4.04,
+      "time": "2019-07-06T10:48:24.460Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38460983",
+      "mag": 4.49,
+      "time": "2019-07-06T09:30:41.240Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38460975",
+      "mag": 4.41,
+      "time": "2019-07-06T09:29:20.970Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci37258076",
+      "mag": 4.24,
+      "time": "2019-07-06T09:28:41.790Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38460967",
+      "mag": 4.89,
+      "time": "2019-07-06T09:28:28.980Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38460311",
+      "mag": 4.56,
+      "time": "2019-07-06T08:32:57.550Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38458999",
+      "mag": 4.05,
+      "time": "2019-07-06T06:34:47.410Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38458759",
+      "mag": 4.27,
+      "time": "2019-07-06T06:12:52.000Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38458679",
+      "mag": 4.63,
+      "time": "2019-07-06T06:01:51.800Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38458655",
+      "mag": 4.15,
+      "time": "2019-07-06T05:58:17.570Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38458375",
+      "mag": 4.29,
+      "time": "2019-07-06T05:25:04.870Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38458143",
+      "mag": 4.03,
+      "time": "2019-07-06T04:58:36.690Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38458079",
+      "mag": 4.47,
+      "time": "2019-07-06T04:52:17.710Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457983",
+      "mag": 4.24,
+      "time": "2019-07-06T04:40:15.980Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci37224964",
+      "mag": 4.33,
+      "time": "2019-07-06T04:37:13.570Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457967",
+      "mag": 4.85,
+      "time": "2019-07-06T04:36:55.310Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457871",
+      "mag": 4.17,
+      "time": "2019-07-06T04:21:35.820Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457863",
+      "mag": 4.01,
+      "time": "2019-07-06T04:19:56.010Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci37221932",
+      "mag": 4.29,
+      "time": "2019-07-06T04:19:15.480Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457847",
+      "mag": 5.44,
+      "time": "2019-07-06T04:18:55.790Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457815",
+      "mag": 4.8,
+      "time": "2019-07-06T04:13:07.080Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457775",
+      "mag": 4.68,
+      "time": "2019-07-06T04:07:04.570Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci37421229",
+      "mag": 4.31,
+      "time": "2019-07-06T03:57:50.900Z",
+      "status": "reviewed"
+    },
+    {
+      "id": "ci38457735",
+      "mag": 4.06,
+      "time": "2019-07-06T03:55:20.020Z",
+      "status": "reviewed"
+    }
+  ],
+  "notes": ""
+}

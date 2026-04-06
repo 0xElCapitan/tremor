@@ -1,0 +1,66 @@
+{
+  "sequence_id": 17,
+  "label": "2021 La Palma",
+  "role": "volcanic",
+  "intraplate_tier": null,
+  "regime_assigned": "default",
+  "regime_expected": "volcanic",
+  "regime_match": false,
+  "mainshock_event_id": "us7000fxa4",
+  "mainshock_event_id_verified": true,
+  "mainshock_utc": "2021-11-23T01:03:24.298Z",
+  "mainshock_magnitude": 4.6,
+  "mainshock_depth_km": 10,
+  "mainshock_location": "6 km SE of Puntallana, Spain",
+  "window_end_utc": "2021-11-26T01:03:24.298Z",
+  "omori_params": {
+    "K": 18,
+    "c": 0.05,
+    "p": 1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 0.9,
+  "match_radius_deg": 0.01,
+  "compute_method": "direct",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0.002,
+    0.998
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 16.2,
+      "actual": 0,
+      "relative_error": null
+    },
+    {
+      "window_hours": 24,
+      "projected": 27.5,
+      "actual": 0,
+      "relative_error": null
+    },
+    {
+      "window_hours": 72,
+      "projected": 37.1,
+      "actual": 0,
+      "relative_error": null
+    }
+  ],
+  "projected_count": 37.1,
+  "actual_count": 0,
+  "projected_bucket": "21+",
+  "actual_bucket": "0-2",
+  "bucket_hit": false,
+  "relative_error": null,
+  "log_error": 3.64,
+  "probability_score": 0.3992,
+  "aftershock_truncated": false,
+  "aftershock_paginated": false,
+  "aftershock_status": "complete",
+  "reviewed_coverage_pct": 100,
+  "aftershock_events": [],
+  "notes": "European catalog — USGS coverage may be thin"
+}
