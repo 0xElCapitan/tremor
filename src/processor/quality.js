@@ -25,6 +25,8 @@ function normalizeStationCount(raw, region) {
  * Lower gap is better. Score 1 when gap=0, 0 when gap ≥ 1.5× median.
  */
 function normalizeGap(raw, region) {
+  // TBD: empirical calibration needed — 0.3 missing-value default is an
+  // engineering heuristic; see grimoires/loa/calibration/
   if (raw === null) return 0.3;
   return Math.max(0, 1 - raw / (region.median_gap * 1.5));
 }
@@ -34,6 +36,8 @@ function normalizeGap(raw, region) {
  * Lower RMS is better.
  */
 function normalizeRms(raw, region) {
+  // TBD: empirical calibration needed — 0.3 missing-value default is an
+  // engineering heuristic; see grimoires/loa/calibration/
   if (raw === null) return 0.3;
   return Math.max(0, 1 - raw / (region.baseline_rms * 2));
 }
@@ -51,10 +55,9 @@ export function computeQuality(feature) {
 
   // ---------------------------------------------------------------------
   // statusWeights, composite weights, and missing-value defaults below are
-  // TBD: empirical calibration needed — see empirical validation audit.
+  // TBD: empirical calibration needed — see grimoires/loa/calibration/
   // Values are engineering defaults, not derived from a historical catalog
-  // refit. Do not tune without an empirical backing; that is a separate
-  // sprint.
+  // refit. Do not tune without empirical backing.
   // ---------------------------------------------------------------------
   const statusWeights = {
     reviewed: 1.0,
@@ -71,7 +74,7 @@ export function computeQuality(feature) {
 
   // Weighted composite (five-component weighted average; weights sum to 1.0).
   // TBD: empirical calibration needed — weight distribution is an engineering
-  // judgement, not sourced.
+  // judgement, not sourced; see grimoires/loa/calibration/
   const composite =
     statusWeight * 0.40 +
     gapScore * 0.15 +

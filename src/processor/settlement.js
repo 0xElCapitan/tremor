@@ -14,7 +14,7 @@
 
 // ---------------------------------------------------------------------
 // Settlement-tier time constants and brier_discount values below are
-// TBD: empirical calibration needed — see empirical validation audit.
+// TBD: empirical calibration needed — see grimoires/loa/calibration/
 //
 // - TWO_HOURS: minimum age before an automatic event can be treated as
 //   "provisional mature" (engineering heuristic; USGS typically promotes
@@ -25,6 +25,8 @@
 //   values (0.10 / 0.20 / 0.25) are also TBD: empirical calibration
 //   needed. Discounts currently encode "how much to penalize a Brier
 //   score when resolving against less-than-gold-standard evidence".
+//   See grimoires/loa/calibration/settlement-findings.md for empirical
+//   derivation of replacement values.
 // ---------------------------------------------------------------------
 const TWO_HOURS = 2 * 60 * 60;
 const ONE_HOUR = 60 * 60;

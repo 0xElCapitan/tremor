@@ -15,6 +15,10 @@ import { findRegion } from './regions.js';
 /**
  * Typical 1-sigma magnitude uncertainty by type.
  * Mw (moment magnitude) is gold standard; Md (duration) is least reliable.
+ *
+ * TBD: plausible per literature, no specific citation — values are
+ * reasonable order-of-magnitude estimates but not derived from a single
+ * authoritative source. See grimoires/loa/calibration/doubt-price-findings.md
  */
 const MAG_TYPE_UNCERTAINTY = {
   Mw:  0.10,
@@ -84,24 +88,22 @@ export function buildMagnitudeUncertainty(feature) {
   const region = findRegion(geometry.coordinates[0], geometry.coordinates[1]);
 
   // Base uncertainty from magnitude type
-  // source: empirical 1-sigma ranges for USGS magnitude types; Mw (moment)
-  // is gold standard ~0.10, Md (duration) least reliable ~0.35. See
-  // MAG_TYPE_UNCERTAINTY table above for full breakdown.
-  // TBD: empirical calibration needed — regional catalog refit vs review
-  // deltas; see empirical validation audit.
+  // TBD: plausible per literature, no specific citation — see
+  // MAG_TYPE_UNCERTAINTY table above and grimoires/loa/calibration/
   let estimatedError = MAG_TYPE_UNCERTAINTY[magType] ?? 0.25;
 
   // Use USGS-reported error if available (floor at half of type baseline).
-  // TBD: empirical calibration needed — half-baseline floor factor is an
-  // engineering heuristic, not sourced. See empirical validation audit.
+  // TBD: empirical calibration needed — 0.5 floor factor is an engineering
+  // heuristic, not sourced; see grimoires/loa/calibration/
   if (reportedError !== null) {
     estimatedError = Math.max(reportedError, estimatedError * 0.5);
   }
 
   // Adjust for station count used in magnitude computation.
-  // Station-count formula (1.5 − 0.5·min(1, nst/20)) and the missing-nst
-  // ×1.3 penalty are TBD: empirical calibration needed — see empirical
-  // validation audit.
+  // TBD: empirical calibration needed — station-count formula
+  // (1.5 − 0.5·min(1, nst/20)), saturation at 20 stations, and the
+  // missing-nst ×1.3 penalty are engineering heuristics;
+  // see grimoires/loa/calibration/doubt-price-findings.md
   if (magNst !== null) {
     const stationFactor = Math.min(1, magNst / 20);
     estimatedError *= 1.5 - (0.5 * stationFactor);
@@ -115,7 +117,8 @@ export function buildMagnitudeUncertainty(feature) {
   // Reviewed events have lower effective uncertainty.
   // Apply ONLY when status is explicitly 'reviewed' — do not apply when
   // status is missing/undefined (that would silently reward absent data).
-  // TBD: empirical calibration needed — 0.7 factor is engineering judgement.
+  // TBD: empirical calibration needed — 0.7 factor is engineering judgement;
+  // see grimoires/loa/calibration/
   if (status === 'reviewed') {
     estimatedError *= 0.7;
   }
@@ -130,8 +133,8 @@ export function buildMagnitudeUncertainty(feature) {
   }
 
   // Doubt price: 0-1 normalized.
-  // TBD: empirical calibration needed — 0.5 ceiling normalization; see
-  // empirical validation audit.
+  // TBD: empirical calibration needed — min(1, σ/0.5) ceiling normalization;
+  // see grimoires/loa/calibration/doubt-price-findings.md
   const doubtPrice = Math.min(1, estimatedError / 0.5);
 
   if (!Number.isFinite(doubtPrice) || doubtPrice < 0 || doubtPrice > 1) {
@@ -141,6 +144,7 @@ export function buildMagnitudeUncertainty(feature) {
   }
 
   // 95% confidence interval
+  // source: standard normal z₀.₉₇₅ = 1.96
   const ci95 = estimatedError * 1.96;
 
   return {
@@ -197,7 +201,8 @@ function round2(n) { return Math.round(n * 100) / 100; }
 function round3(n) { return Math.round(n * 1000) / 1000; }
 
 /**
- * Standard normal CDF approximation (Abramowitz & Stegun 26.2.17).
+ * Standard normal CDF approximation.
+ * source: Abramowitz & Stegun, Handbook of Mathematical Functions, §26.2.17
  * Accurate to ~1.5e-7.
  */
 function normalCDF(x) {
