@@ -1,131 +1,206 @@
-# Sprint Plan: Community Feedback — Review Pipeline Hardening
+# TREMOR Post-Audit Implementation Sprint
 
-**Cycle**: cycle-048
-**PRD**: grimoires/loa/prd.md
-**SDD**: grimoires/loa/sdd.md
-**Created**: 2026-02-28
-**Sprints**: 4 (global IDs: 98-101)
-**Total FRs**: 6
-
-## Sprint Overview
-
-Six targeted fixes to the review pipeline, driven by community feedback (Issues #425, #426, #427, #430). All changes are in the `.claude/scripts/` System Zone (authorized for this cycle). The sprint order follows dependency chains: curl guard → error surfacing → verdict normalization, with TypeScript and independent scripts interleaved for balanced sizing.
-
-| Sprint | Label | FRs | Dependency |
-|--------|-------|-----|------------|
-| 1 | Foundation — Curl Guard, Error Surfacing, YAML Regex | FR-6, FR-4, FR-2 | None |
-| 2 | Verdict Centralization & Flatline Readiness | FR-1, FR-3 | Sprint 1 (FR-4 before FR-1) |
-| 3 | Timeout Consolidation & Migration | FR-5 | None |
-| 4 | Integration Testing, CI Lint, Protocol Docs | Cross-cutting | Sprints 1-3 |
+**Invoke with**: `/implement sprint-1` or paste directly into Claude Code as task context.
+**Source artifacts**: `grimoires/loa/consistency-report.md`, `grimoires/loa/drift-report.md`, `grimoires/loa/reality/hygiene-report.md`, and the empirical validation audit (locate the actual path in `grimoires/loa/` before acting — treat all paths in this document as hints, not ground truth).
+**Posture**: Fix in priority order. Do not batch across groups. Verify each fix before moving to the next.
 
 ---
 
-## Sprint 1: Foundation — Curl Guard, Error Surfacing, YAML Regex
-
-**Global ID**: 98
-**FRs**: FR-6, FR-4, FR-2
-**Rationale**: FR-6 (curl guard) is a dependency for FR-4 (error surfacing uses the same curl pipeline). FR-2 (TypeScript regex) is isolated and placed early to minimize dist/ merge conflicts with concurrent PRs.
-
-### Tasks
-
-| ID | Task | Acceptance Criteria |
-|----|------|---------------------|
-| T1.1 | Create `write_curl_auth_config()` in lib-security.sh (FR-6) | Function in `.claude/scripts/lib-security.sh`. Rejects keys containing CR/LF/null/backslash with clear error. Escapes double quotes. Uses `mktemp` + `chmod 600` + `printf`. Accepts valid base64 chars (+, /, =). Returns config file path on stdout. |
-| T1.2 | Migrate curl config sites to `write_curl_auth_config()` (FR-6) | **10 sites** migrated across 7 files: `lib-curl-fallback.sh` (211-215), `constructs-auth.sh` (156-159), `constructs-browse.sh` (117-120, 179-182), `flatline-proposal-review.sh` (169-170, 232), `flatline-validate-learning.sh` (256-257, 321), `flatline-learning-extractor.sh` (307-308), `flatline-semantic-similarity.sh` (186-187). All use centralized helper. Existing functionality preserved. _(Flatline SPR-01: expanded from 4 to 10 sites)_ |
-| T1.3 | Write curl config guard BATS tests (FR-6) | `tests/unit/curl-config-guard.bats` created. Tests: valid key, CR rejection, LF rejection, null rejection, backslash rejection, quote escaping, base64 chars accepted, file permissions 0600. All pass in isolation. |
-| T1.4 | Surface API error messages in 401 handler (FR-4) | `lib-curl-fallback.sh` `call_api()` 401 handler extracts `.error.message` from response. Error passed through `redact_log_output()` (positional arg). Non-JSON bodies fall back gracefully. Uses if/else (specific OR generic, not both). |
-| T1.5 | Write API error surfacing BATS tests (FR-4) | `tests/unit/api-error-surfacing.bats` created. Tests: JSON error body, HTML body fallback, empty body fallback, key fragment redaction, JSON without `.error` fallback. All pass in isolation. |
-| T1.6 | Fix bridgebuilder YAML parser regex (FR-2) | config.ts line 189 regex inner capture: `\s+` → `[ \t]+`. `bridgebuilder_design_review:` NOT matched by `bridgebuilder:` regex. Existing config.test.ts passes. |
-| T1.7 | Add `loadYamlConfig()` tests for section ordering (FR-2) | New tests in config.test.ts call `loadYamlConfig()` directly. Tests: bridgebuilder before/after red_team, `bridgebuilder_design_review:` not captured. All tests pass. |
-| T1.8 | Rebuild dist/ and commit (FR-2) | `npm run build` succeeds. Built dist/ committed alongside TypeScript changes. |
+Scope: Implement Groups 1 and 2 only. After Group 2 is complete, run the full test suite, summarize what changed, and list any unresolved issues. Stop there. Do not begin Group 3. Group 3 runs in a separate sprint after review.
 
 ---
 
-## Sprint 2: Verdict Centralization & Flatline Readiness
+## Pre-flight: Verify before touching code
 
-**Global ID**: 99
-**FRs**: FR-1, FR-3
-**Rationale**: FR-1 depends on FR-4 being complete (both modify lib-curl-fallback.sh). FR-3 is independent but grouped here for balanced sprint sizing.
-
-### Tasks
-
-| ID | Task | Acceptance Criteria |
-|----|------|---------------------|
-| T2.1 | Create `extract_verdict()` in normalize-json.sh (FR-1) | Function in `.claude/scripts/lib/normalize-json.sh`. Accepts JSON via positional arg or stdin. Returns `.verdict` (priority) or `.overall_verdict` fallback. Exit 1 if neither present. |
-| T2.2 | Migrate verdict check sites to `extract_verdict()` (FR-1) | **10 sites** migrated across 6 files: `gpt-review-api.sh` (116, 131), `lib-curl-fallback.sh` (318), `lib-route-table.sh` (202, 581), `normalize-json.sh` (250), `post-pr-audit.sh` (370, 491), `cache-manager.sh` (580, 581). `condense.sh` left unchanged (triple-fallback). **Semantic migration notes**: Sites using `jq -e '.verdict'` (exit code check) must change to `if verdict=$(extract_verdict "$json")` pattern. `cache-manager.sh:581` uses `"stored"` default — use `verdict=$(extract_verdict "$json") || verdict="stored"` pattern. Each site needs individual exit-code semantic verification. _(Flatline SPR-07: semantic migration risk)_ |
-| T2.3 | Update existing BATS test assertions (FR-1) | 22 assertion locations across `test-gpt-review-integration.bats`, `test-gpt-review-codex-adapter.bats`, `test-gpt-review-multipass.bats` updated to test both `.verdict` and `.overall_verdict` response shapes. |
-| T2.4 | Write `extract_verdict()` BATS tests (FR-1) | `tests/unit/extract-verdict.bats` created. Tests: `.verdict` present, `.overall_verdict` present, both present (`.verdict` wins), neither (exit 1), null verdict (exit 1). All pass in isolation. |
-| T2.5 | Create `flatline-readiness.sh` (FR-3) | `.claude/scripts/flatline-readiness.sh` created (executable). Reads models from config via yq. Maps models→providers→env vars. Exit codes: 0=READY, 1=DISABLED, 2=NO_API_KEYS, 3=DEGRADED. GEMINI_API_KEY alias with deprecation warning. `--json` and `--quick` flags. `PROJECT_ROOT` override. |
-| T2.6 | Write flatline readiness BATS tests (FR-3) | `tests/unit/flatline-readiness.bats` created. Tests: READY, DISABLED, NO_API_KEYS, DEGRADED, GEMINI_API_KEY alias, --json structure, PROJECT_ROOT override. All pass in isolation. |
-| T2.7 | Integrate `flatline-readiness.sh` into simstim preflight (FR-3) | `simstim-orchestrator.sh` Phase 0 calls `flatline-readiness.sh --json`. Status logged to trajectory JSONL. DEGRADED triggers warning but does not block. DISABLED/NO_API_KEYS logged with recommendation. _(Flatline SPR-12: missing integration task)_ |
+Before changing anything, verify all referenced files, paths, and line numbers against the live repo. If a path or line number has drifted from what this prompt states, use the live file as truth and note the drift. Do not invent around a stale reference.
 
 ---
 
-## Sprint 3: Timeout Consolidation & Migration
+## Invariants — preserve these across every Group 1 fix
 
-**Global ID**: 100
-**FRs**: FR-5
-**Rationale**: Independent of other FRs. Involves migration of 3 existing ad-hoc implementations to a canonical helper.
+These are non-negotiable correctness properties. Any fix that violates them is not a fix.
 
-### Tasks
-
-| ID | Task | Acceptance Criteria |
-|----|------|---------------------|
-| T3.1 | Add canonical `run_with_timeout()` to compat-lib.sh (FR-5) | Function in `.claude/scripts/compat-lib.sh`. Fallback: `timeout` → `gtimeout` → `perl` alarm (using fork+exec pattern, NOT bare exec, to preserve exit 124 convention) → warn and run without. Runtime detection (not cached). Array-based execution (`"$@"`). **Note**: bare `exec @ARGV` in perl replaces the process image and loses the `$SIG{ALRM}` handler — must use `system()` or fork+waitpid pattern instead. _(Flatline SPR-11: perl alarm exit code fix)_ |
-| T3.2 | Migrate `post-pr-orchestrator.sh` timeout (FR-5) | Local `run_with_timeout()` at lines 104-133 removed. Sources `compat-lib.sh`. Calls canonical helper. Behavior preserved. |
-| T3.3 | Migrate `post-pr-e2e.sh` timeout (FR-5) | Local timeout logic at lines 103-142 removed. `validate_command()` security allowlist preserved separately. Sources `compat-lib.sh` for timeout. Behavior preserved. |
-| T3.4 | Migrate `golden-path.sh` bare `timeout` (FR-5) | Bare `timeout 2` at line 403 replaced with `run_with_timeout 2`. Sources `compat-lib.sh`. Works on macOS via fallback. |
-| T3.6 | Migrate `butterfreezone-gen.sh` and `mount-loa.sh` bare `timeout` (FR-5) | `butterfreezone-gen.sh:345` (`timeout 30 grep`) and `mount-loa.sh:1706` (`timeout 5 git ls-remote`) migrated to `run_with_timeout`. Both source `compat-lib.sh`. _(Flatline SPR-02: 2 additional migration sites)_ |
-| T3.5 | Write timeout helper BATS tests (FR-5) | `tests/unit/run-with-timeout.bats` created. Tests via PATH manipulation: timeout available, only gtimeout, only perl, none (warning). Tests: timeout fires, exit code preserved. All pass in isolation. |
+1. **One resolution event → one theatre resolution → one certificate artifact.** No event may produce duplicate theatre spawns or duplicate exported certificates, including under retry.
+2. **All disk writes for certificate export must be atomic or idempotent.** A partial write followed by a crash must not produce a corrupt or duplicate artifact on retry.
+3. **Fail closed on malformed core uncertainty inputs.** If `doubt_price`, threshold-crossing probability, or any Brier-critical field cannot be computed to a finite, valid value from required upstream fields, reject the bundle and log clearly. Do not substitute fallback math for core uncertainty values. Silent fallback is how bogus confidence gets laundered into clean-looking output.
 
 ---
 
-## Sprint 4: Integration Testing, CI Lint, Protocol Docs
+## Group 1 — Code fixes that can silently corrupt outputs (do these first, in order)
 
-**Global ID**: 101
-**FRs**: Cross-cutting (all FRs)
-**Rationale**: Final sprint validates all FRs work together, adds CI regression prevention, and documents new patterns.
+Run the full test suite (`node --test test/**/*.test.js`) after each fix before moving to the next. If a fix breaks an existing test, fix the test — do not weaken the assertion.
 
-### Tasks
+### 1a. Poll scheduling and certificate export idempotency (highest priority)
 
-| ID | Task | Acceptance Criteria |
-|----|------|---------------------|
-| T4.1 | Create review pipeline integration test | `tests/unit/review-pipeline-integration.bats` created. Flow: curl config (FR-6) → mock 401 with JSON error (FR-4) → mock success with `.overall_verdict` (FR-1). Verifies error surfaced with redaction, verdict extracted, config validated. Passes in isolation. |
-| T4.2 | Add CI lint for bare `timeout` usage (FR-5) | Lint rule flags bare `timeout` command invocations (pattern: `^\s*timeout [0-9]` or `\btimeout [0-9]` with word boundary) in `.claude/scripts/*.sh` excluding compat-lib.sh. Must NOT false-positive on `--timeout` flags, variable names, or comments. Added to CI workflow. _(Flatline SPR-02: tightened regex)_ |
-| T4.3 | Add CI lint for raw curl config patterns (FR-6) | Lint rule flags raw `Authorization.*Bearer` in `.claude/scripts/*.sh` excluding lib-security.sh and comments. Added to CI workflow. |
-| T4.4 | Update cross-platform-shell.md protocol (FR-5, FR-6) | `.claude/protocols/cross-platform-shell.md` documents `run_with_timeout()` (usage, fallbacks, migration) and `write_curl_auth_config()` (usage, validation, SHELL-002 ref). |
-| T4.5 | Update SKILL.md with flatline readiness warning (FR-3) | Simstim SKILL.md documents fresh-per-cycle validation, references `flatline-readiness.sh` and exit codes, documents DEGRADED behavior. |
+**Location**: `src/index.js` — poll loop and certificate export path
+**Problem**: If two poll cycles overlap, an M≥6.0 event can trigger duplicate `Aftershock Cascade` spawns and duplicate `exportCertificate()` calls. Duplicate certificates corrupt the RLMF training dataset. A boolean in-flight flag prevents overlap but does not protect against the underlying scheduling failure.
 
----
+**Fix**:
+- Replace `setInterval`-based polling with **single-flight scheduling**: poll completes, then schedule the next poll after a fixed delay. This eliminates overlap at the source.
+- Make certificate export **idempotent**: generate a deterministic `certificate_id` from the event ID and resolution timestamp before writing. Before any write, check whether a certificate with that ID already exists on disk. If it does, skip the write and log at debug level. This ensures a retry after a crash cannot duplicate output.
+- Add `skipped_poll_count` to `getState()`. Increment it any time a poll is skipped for any reason. Silence is acceptable in logs; not acceptable in observability.
 
-## Bridge Sprint 5: Bridgebuilder Iteration 1 Fixes
-
-**Global ID**: N/A (bridge iteration)
-**Source**: Bridgebuilder review iteration 1 (PR #435 comment)
-**Rationale**: 3 MEDIUM + 3 LOW findings from Bridgebuilder review.
-
-### Tasks
-
-| ID | Task | Acceptance Criteria |
-|----|------|---------------------|
-| T5.1 | Fix perl alarm race condition (medium-1) | `compat-lib.sh` perl fallback: move `alarm()` after `fork()` so `$pid` is initialized before the handler can fire. Guard handler with `if $pid`. Existing tests pass. |
-| T5.2 | Validate header_name in write_curl_auth_config() (medium-2) | `lib-security.sh` `write_curl_auth_config()` validates header_name against `[A-Za-z0-9-]+` pattern. Rejects names with CR/LF/special chars. Add BATS test for header name validation. |
-| T5.3 | Migrate constructs-install.sh curl config sites (medium-3) | `constructs-install.sh` lines 438 and 769 migrated to `write_curl_auth_config()`. CI lint catches if missed. |
-| T5.4 | Document condense.sh verdict divergence (low-1) | Add comment at `condense.sh` lines 217 and 352 explaining intentional non-migration. |
-| T5.5 | Fix flatline-readiness.sh JSON construction (low-2) | Replace string interpolation with `jq -n --arg/--argjson` for providers object. |
-| T5.6 | Fix null byte detection comment (low-3) | Update comment at `lib-security.sh:270-277` to correctly describe byte vs char comparison. |
+**Success criteria** (all must pass):
+- Two overlapping poll invocations against the same event produce exactly one theatre spawn, exactly one `'resolved'` state transition, and exactly one certificate artifact on disk.
+- A forced retry of an already-exported resolution produces no new file and no duplicate record.
+- `getState()` exposes `skipped_poll_count`.
 
 ---
 
-## Flatline Sprint Review Log
+### 1b. NaN propagation in magnitude/bundle pipeline — fail closed
 
-**Phase**: Sprint plan review (cycle-048 Phase 6)
-**Findings**: 15 total (5 HIGH, 7 MEDIUM, 1 LOW, 2 PRAISE)
-**HIGH_CONSENSUS**: 5 findings auto-integrated:
-- SPR-01: Curl config migration expanded from 4 to 10 sites (T1.2)
-- SPR-02: Bare timeout migration expanded by 2 sites + CI lint regex tightened (T3.6, T4.2)
-- SPR-07: Verdict extraction semantic migration notes added per-site (T2.2)
-- SPR-11: Perl alarm fork+exec pattern noted to preserve exit 124 (T3.1)
-- SPR-12: Missing simstim integration task added (T2.7)
-**DISPUTED**: 0
-**BLOCKERS**: 0 (SPR-01/SPR-02 resolved by scope expansion)
+**Location**: `src/processor/magnitude.js` and `src/processor/bundles.js`
+**Problem**: Missing or malformed upstream USGS fields (`nst`, `gap`, `rms`) can produce `NaN` in `buildMagnitudeUncertainty()`. `NaN` propagates silently through `doubt_price`, `thresholdCrossingProbability()`, `position_history`, and Brier computation. A theatre can export a certificate with a NaN Brier score.
+
+**Fix**:
+
+For **core uncertainty fields** (`doubt_price` and any value feeding `thresholdCrossingProbability()` or Brier output): fail closed. If the value cannot be computed to a `Number.isFinite()` result from the required upstream inputs, reject the bundle at `buildBundle()` with a logged error that includes the event ID and the specific field that is missing or non-finite. Do not pass the event downstream.
+
+For **secondary metadata** (fields used only for logging or human-readable output, not feeding probability math): a documented safe default is acceptable. Mark any such default with `// FALLBACK: <reason>`.
+
+Specific paths to guard in `magnitude.js`:
+- `magnitude.js:68-70` — `1.5 − 0.5·min(1, nst/20)`: guard `nst` null/undefined before division
+- `magnitude.js:72` — missing-nst ×1.3 branch: verify it is actually reached for `undefined` vs `0`
+- `magnitude.js:80` — ×0.7 reviewed adjustment: apply only when `status === 'reviewed'`, not when status is missing
+- `magnitude.js:84` — `min(1, σ/0.5)`: σ must be finite and positive before this executes
+
+At `buildBundle()` in `bundles.js`: validate that `doubt_price` is `Number.isFinite()` and in `[0, 1]`. If not, reject the bundle.
+
+**Success criteria**:
+- Feed a feature with `nst: null`, `gap: undefined`, `rms: null`. Verify it is rejected at `buildBundle()` with a logged error. Verify nothing reaches the processor or any theatre.
+- Feed a fully valid feature. Verify the full pipeline produces a finite Brier score.
+
+---
+
+### 1c. Export failure leaving theatre in inconsistent state — atomic writes
+
+**Location**: `src/rlmf/certificates.js` and resolution paths in each theatre
+**Problem**: If `exportCertificate()` throws after theatre state is set to `'resolved'`, the theatre is permanently resolved in memory with no certificate on disk. The silent loss is undetectable on next poll.
+
+**Additional problem**: If export writes a partial file then throws (e.g., JSON serialization fails mid-stream), a retry can produce a corrupt or duplicate artifact. This is not fixed by state-ordering alone.
+
+**Fix**:
+1. Use **atomic write semantics**: write to a temp file (same directory, unique name), then `fs.renameSync()` or `fs.rename()` to the final path. On POSIX this is atomic. This prevents partial-write corruption on retry.
+2. Combine with the idempotent certificate ID from 1a: before writing even the temp file, check whether the final path already exists.
+3. Only after the atomic rename succeeds: update theatre `state` to `'resolved'`.
+4. If export fails: log the error with event ID and full context, leave theatre in prior state, expose failure in `getState()` as a `pending_exports` list or equivalent. Do not silently swallow.
+
+**Success criteria**:
+- Mock `exportCertificate()` to throw on first call. Verify theatre state is not `'resolved'` after the failure and the event is surfaced in `getState()`.
+- Mock a partial write (throw after temp file created, before rename). Verify no corrupt file exists at the final path after the failure.
+- Verify a successful retry after a prior failure produces exactly one certificate.
+
+---
+
+### 1d. USGS/EMSC response schema validation
+
+**Location**: `src/oracles/usgs.js` — `fetchFeed()` and `fetchDetail()`; `src/oracles/emsc.js` — `crossValidateEMSC()`
+**Problem**: Oracles trust the GeoJSON schema without validation. Missing or malformed fields surface as NaN or undefined dereference downstream rather than clear oracle errors.
+
+**Required fields to validate** (if missing: log a structured warning with event ID and field name, skip the event, do not pass downstream):
+- `id`
+- `properties.mag` (must be a finite number)
+- `properties.magType` (must be a non-empty string)
+- `properties.place`
+- `properties.time`
+- `properties.status`
+- `properties.updated` (used for deduplication)
+- `geometry.coordinates` (must be an array of at least 2 finite numbers)
+
+**Success criteria**: Feed a GeoJSON feature with `properties.mag` missing. Verify rejection at the oracle layer with a structured warning. Verify nothing reaches the processor.
+
+---
+
+### 1e. Poll failure visibility and retry behavior
+
+**Location**: `src/index.js` — poll loop error handling; `src/oracles/usgs.js` — `pollAndIngest()`
+**Problem**: Feed failures may be swallowed or logged at too low a level for operators to detect degradation. No documented retry policy exists.
+
+**Fix**:
+- Catch all fetch errors at the oracle layer. Log at `warn` level with: feed URL, error type, timestamp.
+- Do not retry within the same poll cycle. The next scheduled poll is the natural retry.
+- Add to `getState()`: `last_successful_poll` (timestamp), `consecutive_poll_failures` (count). If `consecutive_poll_failures >= 3`, emit an `error`-level log.
+
+**Success criteria**: Mock the USGS fetch to fail three times consecutively. Verify `getState()` reflects `consecutive_poll_failures: 3` and that an error-level log is emitted on the third failure.
+
+---
+
+## Group 2 — Documentation honesty fixes (do after Group 1)
+
+### 2a. IRIS integration — remove the claim or relabel it
+
+**Location**: Verify exact location in `README.md` and `BUTTERFREEZONE.md` before editing (line numbers in this prompt may have drifted).
+**Fix**: Change any claim that IRIS is an active data source to "USGS and EMSC (IRIS integration planned for v0.2)." Update consistently across both files.
+
+---
+
+### 2b. On-chain P&L — relabel as aspirational
+
+**Location**: `src/rlmf/certificates.js` at the `on_chain` option, and any README reference.
+**Fix**: Add inline comment at the parameter site: `// on_chain: reserved for v0.2 — on-chain P&L attribution not yet implemented`. Update README to match.
+
+---
+
+### 2c. Add `source:` or `// TBD: empirical calibration needed` to every uncited magic number
+
+Verify all line numbers against the live repo before acting. For each hardcoded value, add one of:
+- `// source: <citation>` where a source exists
+- `// TBD: empirical calibration needed — see empirical validation audit` where no source exists
+
+**Prefer grouped comment blocks above parameter clusters** rather than sprinkling individual comment lines. One honest block above a related group of constants is cleaner than per-line noise.
+
+Files and targets (verify paths and lines before editing):
+- `src/processor/quality.js` — `statusWeights` block and all five composite weights, missing-value defaults
+- `src/processor/settlement.js` — `TWO_HOURS`, `ONE_HOUR`, `SEVEN_DAYS` constants; `composite > 0.5` gate; all three `brier_discount` values
+- `src/processor/regions.js` — all `REGION_PROFILES` fields; `DEFAULT_REGION`; `DENSITY_NORM`
+- `src/processor/magnitude.js` — reported-error floor factor; station-count formula; missing-nst penalty; reviewed-status adjustment; doubt-price normalization ceiling
+- `src/theatres/aftershock.js` — match-radius multiplier; degree conversion; Omori-blend correction; blending floor; `inferRegime` heuristic bounds
+
+Do not change any values. Labels only.
+
+---
+
+## Group 3 — Repo governance (do after Group 2)
+
+### 3a. Create `CHANGELOG.md`
+Document v0.1.0 features. Sections: Added, Known Gaps (IRIS, on-chain P&L), Planned for v0.2.
+
+### 3b. Create `SECURITY.md`
+Include: vulnerability disclosure channel, expected response timeline, scope statement for a zero-external-dependency CLI construct.
+
+### 3c. Create `CONTRIBUTING.md`
+Include: how to file a bug, how to propose a feature, testing requirements (full suite must pass via `node --test`), and that zero new runtime dependencies is a hard constraint unless explicitly approved.
+
+### 3d. Create `ROADMAP.md`
+At minimum:
+- v0.2.0: IRIS oracle, on-chain P&L, empirical calibration of regional profiles and settlement discounts
+- v0.3.0: Omori regime backtest results merged, quality composite weight refit
+
+### 3e. Add GitHub Actions
+
+Three workflows. For `build.yml`, do not hardcode `--help` as the smoke test — verify the actual documented CLI invocation from the README and use that. The goal is: "documented entry point exits 0 on Node.js 20.x and 22.x."
+
+- `test.yml`: run full test suite on every push to `master` and every PR
+- `lint.yml`: run `eslint src/` on every PR
+- `build.yml`: verify the documented CLI smoke path exits 0 on Node.js 20.x and 22.x
+
+---
+
+## Hard constraints
+
+- **Do not tune any quantitative parameter values.** Group 2c adds labels; recalibration is a future sprint with empirical backing.
+- **Do not add runtime npm dependencies.** All fixes use Node.js 20+ built-ins only.
+- **Do not refactor module boundaries.** Fixes must be local to identified files.
+- **Preserve JSDoc headers** in any modified file. Update them if behavior changes.
+- **Verify paths and line numbers before acting.** This prompt is a hint, not ground truth.
+
+---
+
+## Definition of done
+
+- [ ] Group 1: All five code fixes implemented, each with a test that would have caught the bug before this sprint
+- [ ] Invariants verified: one event → one theatre resolution → one certificate; atomic export writes; fail-closed NaN handling
+- [ ] Group 2: IRIS and on-chain P&L relabeled; every uncited magic number in the five files has a grouped `source:` or `TBD:` comment block
+- [ ] Group 3: Four governance files created; three GitHub Actions workflows added; `build.yml` smoke path verified against live README
+- [ ] Full test suite passes with no regressions
+- [ ] `getState()` exposes `skipped_poll_count`, `consecutive_poll_failures`, `last_successful_poll`, `pending_exports`
