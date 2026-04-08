@@ -12,6 +12,7 @@
 
 import { pollAndIngest } from './oracles/usgs.js';
 import { crossValidateEMSC } from './oracles/emsc.js';
+import { crossValidateGEOFON } from './oracles/geofon.js';
 import { createMagnitudeGate, processMagnitudeGate, expireMagnitudeGate } from './theatres/mag-gate.js';
 import { createOracleDivergence, resolveOracleDivergence } from './theatres/paradox.js';
 import { createAftershockCascade, processAftershockCascade, resolveAftershockCascade } from './theatres/aftershock.js';
@@ -204,9 +205,10 @@ export class TremorConstruct {
     }
 
     for (const bundle of result.bundles) {
-      // Cross-validate with EMSC if enabled
+      // Cross-validate with EMSC + GEOFON if enabled
       if (this.enableCrossValidation && bundle.evidence_class === 'provisional') {
-        const emscResult = await crossValidateEMSC({
+        // TODO: queue/batch in production to respect rate limits
+        const featureLike = {
           properties: {
             mag: bundle.payload.magnitude.value,
             time: bundle.payload.event_time,
@@ -218,9 +220,35 @@ export class TremorConstruct {
               bundle.payload.location.depth_km,
             ],
           },
-        });
-        if (emscResult) {
-          bundle.cross_validation = emscResult;
+        };
+
+        const [emscSettled, geofonSettled] = await Promise.allSettled([
+          crossValidateEMSC(featureLike),
+          crossValidateGEOFON(featureLike),
+        ]);
+
+        const emsc = emscSettled.status === 'fulfilled' ? emscSettled.value : null;
+        const geofon = geofonSettled.status === 'fulfilled' ? geofonSettled.value : null;
+
+        if (emsc || geofon) {
+          const sources = [
+            ...(emsc   ? emsc.sources_checked   : []),
+            ...(geofon ? geofon.sources_checked : []),
+          ];
+          const divergences = [
+            emsc?.max_divergence ?? null,
+            geofon?.divergence   ?? null,
+          ].filter((d) => d !== null);
+
+          bundle.cross_validation = {
+            sources_checked: sources,
+            max_divergence: divergences.length > 0
+              ? Math.round(Math.max(...divergences) * 10000) / 10000
+              : 0,
+            paradox_flag: divergences.some((d) => d >= 0.3),
+            emsc:   emsc   ?? null,
+            geofon: geofon ?? null,
+          };
         }
       }
 
@@ -516,6 +544,7 @@ export class TremorConstruct {
 // Re-export components for granular use
 export { pollAndIngest } from './oracles/usgs.js';
 export { crossValidateEMSC } from './oracles/emsc.js';
+export { crossValidateGEOFON } from './oracles/geofon.js';
 export { buildBundle } from './processor/bundles.js';
 export { computeQuality } from './processor/quality.js';
 export { buildMagnitudeUncertainty, thresholdCrossingProbability } from './processor/magnitude.js';

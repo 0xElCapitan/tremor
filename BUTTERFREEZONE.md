@@ -40,6 +40,7 @@ TREMOR (Threshold Resolution & Earth Movement Oracle) is a seismic intelligence 
 - **thresholdCrossingProbability** — Normal CDF approximation for probability that true magnitude exceeds a Theatre threshold given the uncertainty model. (`src/processor/magnitude.js:92`)
 - **assessStatusFlip** — Three-tier settlement logic handling USGS review latency: oracle (reviewed), provisional mature (stable + cross-validated), and market freeze. (`src/processor/settlement.js:30`)
 - **crossValidateEMSC** — Queries EMSC for independent magnitude readings. Divergence ≥0.3 triggers Paradox Engine flag. (`src/oracles/emsc.js:16`)
+- **crossValidateGEOFON** — Queries GEOFON GFZ FDSN for independent magnitude readings (pipe-delimited text format). Divergence ≥0.3 triggers Paradox Engine flag. (`src/oracles/geofon.js`)
 - **processMagnitudeGate** — Updates Magnitude Gate Theatre positions using doubt-priced threshold crossing probabilities. (`src/theatres/mag-gate.js:56`)
 - **processAftershockCascade** — Bayesian update blending Omori-law prior with observed aftershock rate to recompute 5-bucket probabilities. (`src/theatres/aftershock.js:151`)
 - **processSwarmWatch** — Recomputes rolling Gutenberg-Richter b-value and escalation signal on each new cluster event. (`src/theatres/swarm.js:150`)
@@ -147,13 +148,14 @@ Directory structure:
 | USGS NEIC | `earthquake.usgs.gov/earthquakes/feed/v1.0/summary/*.geojson` | GeoJSON | None |
 | USGS API | `earthquake.usgs.gov/fdsnws/event/1/query` | GeoJSON | None |
 | EMSC | `seismicportal.eu/fdsnws/event/1/query` | JSON | None |
+| GEOFON GFZ | `geofon.gfz.de/fdsnws/event/1/query` | Text (pipe-delimited) | None |
 
 ## Module Map
 <!-- provenance: DERIVED -->
 
 | Module | Files | Purpose |
 |--------|-------|---------|
-| `src/oracles/` | 2 | OSINT data source adapters (USGS polling, EMSC cross-validation) |
+| `src/oracles/` | 3 | OSINT data source adapters (USGS polling, EMSC + GEOFON cross-validation) |
 | `src/processor/` | 5 | Evidence bundle construction pipeline (quality, magnitude, settlement, regions, bundle orchestration) |
 | `src/theatres/` | 5 | Theatre-specific market logic (magnitude gate, aftershock cascade, swarm watch, depth regime, oracle divergence) |
 | `src/rlmf/` | 1 | RLMF training data export (Brier scoring, temporal analysis, certificate generation) |
