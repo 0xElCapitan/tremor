@@ -51,7 +51,7 @@ export async function crossValidateEMSC(feature) {
       return {
         sources_checked: ['EMSC'],
         magnitude_readings: { USGS: props.mag },
-        max_divergence: 0,
+        divergence: 0,
         paradox_flag: false,
         matched: false,
       };
@@ -78,7 +78,7 @@ export async function crossValidateEMSC(feature) {
       return {
         sources_checked: ['EMSC'],
         magnitude_readings: { USGS: props.mag },
-        max_divergence: 0,
+        divergence: 0,
         paradox_flag: false,
         matched: false,
       };
@@ -109,7 +109,7 @@ export async function crossValidateEMSC(feature) {
         USGS: usgsMag,
         EMSC: emscMag,
       },
-      max_divergence: Math.round(divergence * 100) / 100,
+      divergence: Math.round(divergence * 100) / 100,
       paradox_flag: divergence >= 0.3,
       matched: true,
       emsc_event_id: bestMatch.id ?? null,

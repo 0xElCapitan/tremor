@@ -236,19 +236,30 @@ export class TremorConstruct {
             ...(geofon ? geofon.sources_checked : []),
           ];
           const divergences = [
-            emsc?.max_divergence ?? null,
-            geofon?.divergence   ?? null,
+            emsc?.divergence   ?? null,
+            geofon?.divergence ?? null,
           ].filter((d) => d !== null);
 
           bundle.cross_validation = {
             sources_checked: sources,
-            max_divergence: divergences.length > 0
+            divergence: divergences.length > 0
               ? Math.round(Math.max(...divergences) * 10000) / 10000
               : 0,
             paradox_flag: divergences.some((d) => d >= 0.3),
             emsc:   emsc   ?? null,
             geofon: geofon ?? null,
           };
+
+          // Upgrade evidence class to cross_validated if confirmed by 2+
+          // networks with low divergence. This was previously unreachable
+          // because cross-validation runs after buildBundle returns.
+          if (
+            bundle.evidence_class === 'provisional' &&
+            bundle.cross_validation.sources_checked.length >= 2 &&
+            bundle.cross_validation.divergence < 0.2
+          ) {
+            bundle.evidence_class = 'cross_validated';
+          }
         }
       }
 

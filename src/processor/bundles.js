@@ -118,7 +118,7 @@ export function buildBundle(feature, config = {}) {
     evidenceClass === 'provisional' &&
     crossValidation &&
     crossValidation.sources_checked.length >= 2 &&
-    crossValidation.max_divergence < 0.2
+    crossValidation.divergence < 0.2
   ) {
     evidenceClass = 'cross_validated';
   }

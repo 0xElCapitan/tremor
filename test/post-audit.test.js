@@ -505,3 +505,271 @@ describe('1e: poll failure visibility', () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------
+// 2a — cross_validated evidence class upgrade reachable
+// ---------------------------------------------------------------------
+
+describe('2a: cross_validated evidence class upgrade', () => {
+  it('upgrades provisional to cross_validated when 2+ sources agree with low divergence', async () => {
+    const tremor = new TremorConstruct({ enableCrossValidation: true });
+    const feature = makeFeature({
+      id: 'us7000xval',
+      properties: { mag: 5.2, status: 'automatic' },
+    });
+    const feed = {
+      type: 'FeatureCollection',
+      metadata: { generated: Date.now(), count: 1 },
+      features: [feature],
+    };
+
+    const origFetch = globalThis.fetch;
+    globalThis.fetch = async (url) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('seismicportal.eu')) {
+        return {
+          ok: true,
+          json: async () => ({
+            features: [{
+              id: 'emsc-001',
+              properties: { mag: 5.25, time: feature.properties.time + 2000 },
+              geometry: { coordinates: [-121.89, 37.34, 8.2] },
+            }],
+          }),
+        };
+      }
+      if (urlStr.includes('geofon.gfz.de')) {
+        return {
+          ok: true,
+          text: async () => [
+            '#EventID|Time|Latitude|Longitude|Depth|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName',
+            `gfz001|2026-04-07T12:00:05.0|37.34|-121.89|8.2|GFZ|GEOFON|GFZ|gfz001|Mw|5.3|GFZ|San Jose`,
+          ].join('\n'),
+        };
+      }
+      // USGS feed
+      return { ok: true, status: 200, json: async () => feed };
+    };
+
+    try {
+      const result = await tremor.poll();
+      assert.equal(result.bundles.length, 1);
+      const bundle = result.bundles[0];
+
+      // Both sources returned — divergences are 0.05 (EMSC) and 0.1 (GEOFON),
+      // both < 0.2, so evidence class should be upgraded
+      assert.equal(bundle.cross_validation.sources_checked.length, 2);
+      assert.ok(bundle.cross_validation.sources_checked.includes('EMSC'));
+      assert.ok(bundle.cross_validation.sources_checked.includes('GEOFON_GFZ'));
+      assert.equal(bundle.evidence_class, 'cross_validated');
+    } finally {
+      globalThis.fetch = origFetch;
+    }
+  });
+
+  it('does not upgrade when divergence >= 0.2', async () => {
+    const tremor = new TremorConstruct({ enableCrossValidation: true });
+    const feature = makeFeature({
+      id: 'us7000xval2',
+      properties: { mag: 5.2, status: 'automatic' },
+    });
+    const feed = {
+      type: 'FeatureCollection',
+      metadata: { generated: Date.now(), count: 1 },
+      features: [feature],
+    };
+
+    const origFetch = globalThis.fetch;
+    globalThis.fetch = async (url) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('seismicportal.eu')) {
+        return {
+          ok: true,
+          json: async () => ({
+            features: [{
+              id: 'emsc-002',
+              properties: { mag: 5.5, time: feature.properties.time + 2000 },
+              geometry: { coordinates: [-121.89, 37.34, 8.2] },
+            }],
+          }),
+        };
+      }
+      if (urlStr.includes('geofon.gfz.de')) {
+        return {
+          ok: true,
+          text: async () => [
+            '#EventID|Time|Latitude|Longitude|Depth|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName',
+            `gfz002|2026-04-07T12:00:05.0|37.34|-121.89|8.2|GFZ|GEOFON|GFZ|gfz002|Mw|5.6|GFZ|San Jose`,
+          ].join('\n'),
+        };
+      }
+      return { ok: true, status: 200, json: async () => feed };
+    };
+
+    try {
+      const result = await tremor.poll();
+      const bundle = result.bundles[0];
+
+      // EMSC divergence 0.3, GEOFON divergence 0.4 — max is 0.4, above 0.2 threshold
+      assert.equal(bundle.cross_validation.sources_checked.length, 2);
+      assert.equal(bundle.evidence_class, 'provisional');
+    } finally {
+      globalThis.fetch = origFetch;
+    }
+  });
+
+  it('does not upgrade when only one source responds', async () => {
+    const tremor = new TremorConstruct({ enableCrossValidation: true });
+    const feature = makeFeature({
+      id: 'us7000xval3',
+      properties: { mag: 5.2, status: 'automatic' },
+    });
+    const feed = {
+      type: 'FeatureCollection',
+      metadata: { generated: Date.now(), count: 1 },
+      features: [feature],
+    };
+
+    const origFetch = globalThis.fetch;
+    globalThis.fetch = async (url) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('seismicportal.eu')) {
+        return {
+          ok: true,
+          json: async () => ({
+            features: [{
+              id: 'emsc-003',
+              properties: { mag: 5.25, time: feature.properties.time + 2000 },
+              geometry: { coordinates: [-121.89, 37.34, 8.2] },
+            }],
+          }),
+        };
+      }
+      if (urlStr.includes('geofon.gfz.de')) {
+        // GEOFON fails
+        throw new Error('network down');
+      }
+      return { ok: true, status: 200, json: async () => feed };
+    };
+
+    try {
+      const result = await tremor.poll();
+      const bundle = result.bundles[0];
+
+      // Only EMSC responded — 1 source, not enough for upgrade
+      assert.equal(bundle.cross_validation.sources_checked.length, 1);
+      assert.equal(bundle.evidence_class, 'provisional');
+    } finally {
+      globalThis.fetch = origFetch;
+    }
+  });
+});
+
+// ---------------------------------------------------------------------
+// 2b — Oracle return shape normalization (divergence field)
+// ---------------------------------------------------------------------
+
+describe('2b: oracle divergence field normalization', () => {
+  it('EMSC matched result uses divergence field (not max_divergence)', async () => {
+    const { crossValidateEMSC } = await import('../src/oracles/emsc.js');
+    const origFetch = globalThis.fetch;
+    globalThis.fetch = async () => ({
+      ok: true,
+      json: async () => ({
+        features: [{
+          id: 'emsc-norm-1',
+          properties: { mag: 5.5, time: Date.now() },
+          geometry: { coordinates: [-121.89, 37.34, 8.2] },
+        }],
+      }),
+    });
+
+    try {
+      const result = await crossValidateEMSC({
+        properties: { mag: 5.2, time: Date.now() },
+        geometry: { coordinates: [-121.89, 37.34, 8.2] },
+      });
+
+      assert.notEqual(result, null);
+      assert.ok('divergence' in result, 'EMSC result must have divergence field');
+      assert.equal(result.max_divergence, undefined, 'EMSC result must not have max_divergence');
+      assert.equal(typeof result.divergence, 'number');
+    } finally {
+      globalThis.fetch = origFetch;
+    }
+  });
+
+  it('EMSC no-match result uses divergence field', async () => {
+    const { crossValidateEMSC } = await import('../src/oracles/emsc.js');
+    const origFetch = globalThis.fetch;
+    globalThis.fetch = async () => ({
+      ok: true,
+      json: async () => ({ features: [] }),
+    });
+
+    try {
+      const result = await crossValidateEMSC({
+        properties: { mag: 5.2, time: Date.now() },
+        geometry: { coordinates: [-121.89, 37.34, 8.2] },
+      });
+
+      assert.notEqual(result, null);
+      assert.ok('divergence' in result, 'EMSC no-match must have divergence field');
+      assert.equal(result.max_divergence, undefined, 'must not have max_divergence');
+      assert.equal(result.divergence, 0);
+    } finally {
+      globalThis.fetch = origFetch;
+    }
+  });
+
+  it('aggregate cross_validation uses divergence field (not max_divergence)', async () => {
+    const tremor = new TremorConstruct({ enableCrossValidation: true });
+    const feature = makeFeature({
+      id: 'us7000norm',
+      properties: { mag: 5.2, status: 'automatic' },
+    });
+    const feed = {
+      type: 'FeatureCollection',
+      metadata: { generated: Date.now(), count: 1 },
+      features: [feature],
+    };
+
+    const origFetch = globalThis.fetch;
+    globalThis.fetch = async (url) => {
+      const urlStr = typeof url === 'string' ? url : url.toString();
+      if (urlStr.includes('seismicportal.eu')) {
+        return {
+          ok: true,
+          json: async () => ({
+            features: [{
+              id: 'emsc-n1',
+              properties: { mag: 5.3, time: feature.properties.time + 1000 },
+              geometry: { coordinates: [-121.89, 37.34, 8.2] },
+            }],
+          }),
+        };
+      }
+      if (urlStr.includes('geofon.gfz.de')) {
+        return {
+          ok: true,
+          text: async () => [
+            '#EventID|Time|Latitude|Longitude|Depth|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName',
+            `gfz-n1|2026-04-07T12:00:05.0|37.34|-121.89|8.2|GFZ|GEOFON|GFZ|gfz-n1|Mw|5.25|GFZ|San Jose`,
+          ].join('\n'),
+        };
+      }
+      return { ok: true, status: 200, json: async () => feed };
+    };
+
+    try {
+      const result = await tremor.poll();
+      const cv = result.bundles[0].cross_validation;
+
+      assert.ok('divergence' in cv, 'aggregate must have divergence field');
+      assert.equal(cv.max_divergence, undefined, 'aggregate must not have max_divergence');
+      assert.equal(typeof cv.divergence, 'number');
+    } finally {
+      globalThis.fetch = origFetch;
+    }
+  });
+});
