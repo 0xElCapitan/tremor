@@ -8,5 +8,21 @@ node_modules/
 .beads/
 .claude/settings.local.json
 
+# =============================================================================
+# LOA FRAMEWORK (vendored — don't track on GitHub)
+# .claude/overrides/ and .claude/settings.json remain tracked
+# =============================================================================
+.claude/*
+!.claude/overrides/
+!.claude/settings.json
+
+# Loa generated ground-truth files
+grimoires/loa/ground-truth/*
+grimoires/loa/gt/*
+
+# Loa generated translations (keep README)
+grimoires/loa/translations/*
+!grimoires/loa/translations/README.md
+
 # Loa disabled skills (feature-gated)
 .claude/.skills-disabled/
